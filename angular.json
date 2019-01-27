@@ -23,9 +23,14 @@
               "src/assets"
             ],
             "styles": [
+              "semantic/dist/semantic.min.css",
+              "src/assets/bootstrap.spacing.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "semantic/dist/semantic.min.js"
+            ]
           },
           "configurations": {
             "production": {

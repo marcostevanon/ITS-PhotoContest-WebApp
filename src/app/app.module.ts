@@ -1,18 +1,38 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './auth.guard';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LoginComponent } from './login/login.component';
+import { RegistrationComponent } from './registration/registration.component';
+import { GalleryComponent } from './gallery/gallery.component';
+
+import { SuiModule } from 'ng2-semantic-ui';
+
+const appRoutes: Routes = [
+  { path: 'signup', component: RegistrationComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'gallery', component: GalleryComponent, canActivate: [AuthGuard] },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  // { path: '**', component: PageNotFoundComponent }
+];
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginComponent,
+    RegistrationComponent,
+    GalleryComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    RouterModule.forRoot(appRoutes),
+    SuiModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

@@ -42,3 +42,20 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+
+# Semanti-UI
+semantic/gulpfile.js
+semantic/dist/*
+semantic/tasks
+semantic/src/definitions
+semantic/src/semantic.less
+semantic/src/theme.less
+semantic/src/themes
+!semantic/dist/semantic.min.css
+!semantic/dist/semantic.min.js
+
+#!!
+semantic/src/*
+
+*.spec.ts
