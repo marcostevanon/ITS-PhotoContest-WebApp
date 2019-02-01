@@ -1,0 +1,105 @@
+<div class="ui middle aligned center aligned grid">
+  <div class="column">
+
+    <!-- Header -->
+    <h2 class="ui blue image header">
+      <img src="assets/logo.png" class="image"><br>
+      <div class="header">ITS Photo Contest</div>
+      <div class="sub header">Login</div>
+    </h2>
+
+    <!-- Login form -->
+    <form class="ui large form"
+      #loginForm="ngForm" 
+      (ngSubmit)="submit(loginForm)">
+
+      <div class="ui stacked segment">
+
+        <!-- Username field -->
+        <div class="field">
+          <label class="ui left aligned ml-2" style="float: left;">Username</label>
+
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text"
+              name="username" 
+              placeholder="Username" 
+              autocomplete="off"
+              tabindex="1"
+              ngModel required 
+              [disabled]="isLoading"
+              (input)="isUsernameValid = true">
+          </div>
+
+          <!-- Username validation error -->
+          <div class="ui pointing orange fluid basic label"
+            [class.hidden]="isUsernameValid">
+            Please enter a valid Username
+          </div>
+        </div>
+
+        <!-- Password field -->
+        <div class="field">
+
+          <label class="ui left aligned ml-2" style="float: left;">Password</label>
+          <label class="ui right aligned" style="float: right; display: none">
+            <a routerLink="/recovery" 
+              [class.disable-link]="isLoading"
+              tabindex="5">Forgot password?</a>
+          </label>
+          
+          <div class="ui left icon input">
+            <i class="lock icon"></i>
+            <input type="password"
+              name="password" 
+              placeholder="Password"
+              autocomplete="off"
+              tabindex="2"
+              ngModel required 
+              [disabled]="isLoading" 
+              (input)="isPasswordValid = true">
+          </div>
+
+          <!-- Password validation error -->
+          <div class="ui pointing orange fluid basic label" 
+            [class.hidden]="isPasswordValid">
+            Please enter a password
+          </div>
+        </div>
+
+        <!-- Login button -->
+        <button type="submit" 
+          class="ui fluid large blue submit button"
+          tabindex="3" 
+          [class.loading]="isLoading"
+          [disabled]="isLoading">
+          Login
+        </button>
+
+        <div class="ui right aligned container">
+          <button type="button" *ngIf="alreadyLoggedIn"
+            class="ui right aligned small basic blue button mt-1 mr-0 p-2"
+            tabindex="4" 
+            [disabled]="isLoading"
+            routerLink="/gallery">
+            You are logged-in as <b>{{loggedInUsername}}</b>
+          </button>
+        </div>
+
+        <!-- Response Error Message -->
+        <div class="ui red fluid basic label mt-2" 
+          [class.hidden]="isFormValid">
+          {{loginErrorMessage}}
+        </div>
+      </div>
+    </form>
+
+    <!-- Sign up message -->
+    <div class="ui message">
+      New user? 
+      <a routerLink="/signup" [class.disable-link]="isLoading">
+        Sign Up
+      </a>
+    </div>
+  </div>
+</div>

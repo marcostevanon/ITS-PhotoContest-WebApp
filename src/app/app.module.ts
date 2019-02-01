@@ -9,6 +9,8 @@ import { RegistrationComponent } from './registration/registration.component';
 import { GalleryComponent } from './gallery/gallery.component';
 
 import { SuiModule } from 'ng2-semantic-ui';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 const appRoutes: Routes = [
   { path: 'signup', component: RegistrationComponent },
@@ -29,7 +31,9 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
-    SuiModule
+		SuiModule,
+		FormsModule,
+		HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
