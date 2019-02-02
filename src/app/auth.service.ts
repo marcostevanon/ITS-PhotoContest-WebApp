@@ -5,14 +5,12 @@ import { Router } from '@angular/router';
 import { LoginResponse } from 'src/model/loginresponse.model';
 import * as moment from "moment";
 import { User } from 'src/model/user.model';
+import { Post } from 'src/model/post.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly base_url = environment.api_endpoint;
-
   private readonly defaultHeader = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
-  private readonly authenticatedHeader = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'x-access-token': localStorage.getItem('token') }) }
-
   public redirectUrl: string;
 
   constructor(private http: HttpClient, private router: Router) { }
@@ -52,9 +50,39 @@ export class AuthService {
   }
 
   getUserData(): User {
-    const user = localStorage.getItem('userdata');
-    return JSON.parse(user);
+    var user: User = JSON.parse(localStorage.getItem('userdata'))
+    if (!user.avatar) user.avatar = environment.default_avatar;
+    return user;
   }
+
+  // API REQUEST
+  getGallery() {
+    return new Promise((resolve, reject) => {
+      this.http.get<Array<Post>>(`${this.base_url}/gallery`, this.getAuthenticatedHeader())
+        .subscribe(
+          (response: Array<Post>) => resolve(response),
+          (err) => reject(err));
+    })
+  }
+
+  getAuthenticatedHeader(): object {
+    return { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'x-access-token': localStorage.getItem('token') }) }
+  }
+
+  setVote(post_id, vote_value) {
+    return new Promise((resolve, reject) => {
+      this.http.post<Array<Post>>(`${this.base_url}/vote`,
+        {
+          image_id: post_id,
+          user_id: this.getUserData().id,
+          value: vote_value
+        }, this.getAuthenticatedHeader())
+        .subscribe(
+          (response) => resolve(response),
+          (err) => reject(err));
+    })
+  }
+
 
   //utils
   getExpiration() {
@@ -63,4 +91,3 @@ export class AuthService {
     return moment(expiresAt);
   }
 }
-

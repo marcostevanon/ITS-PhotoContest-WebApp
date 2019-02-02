@@ -11,6 +11,7 @@ import { GalleryComponent } from './gallery/gallery.component';
 import { SuiModule } from 'ng2-semantic-ui';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { LayoutComponent } from './layout/layout.component';
 
 const appRoutes: Routes = [
   { path: 'signup', component: RegistrationComponent },
@@ -26,7 +27,8 @@ const appRoutes: Routes = [
     AppComponent,
     LoginComponent,
     RegistrationComponent,
-    GalleryComponent
+    GalleryComponent,
+    LayoutComponent
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,6 @@
 import * as moment from "moment";
+import { User } from './user.model';
+import { environment } from 'src/environments/environment';
 
 export class Post {
     post_id: number
@@ -9,33 +11,35 @@ export class Post {
     title: string
     description: string
     tags: Array<string>
-    eta: string
     votes_n: number
     votes_avg: number
+
     upload_timestamp: string
-    
+    eta: string
+
     isVoted: boolean // isVoted by the current logged user?
     isReadonly: boolean;
     isCurrentUserOwner: boolean;
     isSendingVote: boolean = false;
 
-    constructor(item: PostResponse, current_user_name) {
+    constructor(item: PostResponse, current_user: User) {
         this.post_id = item.post_id;
-        this.author_username = item.author_avatar_url;
-        this.author_avatar_url = item.author_avatar_url;
+        this.author_username = item.author_username;
+        this.author_avatar_url = item.author_avatar_url ? item.author_avatar_url : environment.default_avatar;
         this.raw_image_url = item.raw_image_url;
         this.thumbnail_url = item.thumbnail_url;
         this.title = item.title;
         this.description = item.description;
         this.tags = item.tags ? item.tags : [];
-        this.upload_timestamp = item.timestamp;
-        this.eta = this.eta = moment(this.upload_timestamp).fromNow();
         this.votes_n = item.votes_n;
         this.votes_avg = item.votes_avg;
-        
+
+        this.upload_timestamp = item.timestamp;
+        this.eta = this.eta = moment(this.upload_timestamp).fromNow();
+
         this.isVoted = item.vote ? true : false;
-        this.isReadonly = this.isVoted
-        this.isCurrentUserOwner = this.author_username == current_user_name
+        this.isReadonly = this.isVoted;
+        this.isCurrentUserOwner = this.author_username == current_user.username;
     }
 }
 

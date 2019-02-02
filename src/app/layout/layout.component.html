@@ -1,0 +1,52 @@
+<div class="ui inverted menu attached mb-3">
+  <div class="ui container">
+
+    <a routerLink="/gallery" class="item">
+      <i class="grid layout icon"></i>
+      Gallery
+    </a>
+
+    <a routerLink="/ranking" class="item">
+      <i class="star outline icon"></i>
+      Ranking
+    </a>
+
+    <a routerLink="/search" class="item">
+      <i class="search icon"></i>
+      Search
+    </a>
+
+    <div class="right menu">
+      <!-- <a routerLink="/upload" class="item" [class.active]="isUploadActive"><i class="upload icon m-0"></i>Upload</a> -->
+
+      <div class="ui simple dropdown item" style="padding: 4px 13px !important;">
+
+        <img class="ui avatar image" src="{{loggedUser.avatar}}" />
+        <span>&nbsp;{{loggedUser.username}}</span>
+        <i class="dropdown icon"></i>
+
+        <div class="menu">
+          <a routerLink="/profile/{{loggedUser.id}}" class="item">
+            <i class="user outline icon"></i>
+            Show Profile
+          </a>
+
+          <a (click)="logout()" class="item">
+            <i class="logout icon"></i>
+            Logout
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="ui segment">
+	<div class="ui active inverted dimmer">
+		<div class="ui indeterminate text active loader">
+			Preparing...
+		</div>
+	</div>
+	<br><br><br><br><br><br>
+</div> -->

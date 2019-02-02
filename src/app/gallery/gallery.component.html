@@ -1,0 +1,163 @@
+<app-layout></app-layout>
+
+<div class="ui container">
+
+	<!-- Upload Button -->
+	<button routerLink="/upload" class="ui right floated basic green icon labeled button">
+		<i class="upload icon"></i>Upload
+	</button>
+
+	<!-- Refresh Button -->
+	<button class="ui basic icon labeled button" (click)=" fetchGalleryPosts()" [class.loading]="isGalleryListLoading"
+	 [disabled]="isGalleryListLoading">
+		<i class="sync icon"></i>Refresh
+	</button><br><br>
+
+	<!-- <sui-message class="green icon mt-0 mb-4" *ngIf="imageUploadedConfirmation">
+		<i class="notched check icon"></i>
+		<div class="content">
+			<div class="header">We have your image!</div>
+			<p>It will be available within a few minutes.</p>
+		</div>
+	</sui-message> -->
+
+	<!-- Gallery placeholder when loading -->
+	<div class="ui grid" *ngIf="isGalleryListLoading">
+
+		<div *ngFor="let i of placeholderPrefetchingArray" class="sixteen wide mobile eight wide tablet four wide computer column">
+			<div class="ui centered card fluid">
+
+				<!-- Header -->
+				<div class="content">
+					<div class="ui placeholder">
+						<div class="image header">
+							<div class="line"></div>
+							<div class="line"></div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Image -->
+				<div class="ui placeholder">
+					<div class="square image"></div>
+				</div>
+
+				<!-- Card Body -->
+				<div class="content">
+					<div class="ui placeholder">
+						<div class="paragraph">
+							<div class="line"></div>
+							<div class="line"></div>
+							<div class="line"></div>
+							<div class="line"></div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- Gallery List -->
+	<div class="ui grid" *ngIf="!isGalleryListLoading">
+
+		<!-- GALLERY LIST -->
+		<div *ngFor="let post of posts" class="sixteen wide mobile eight wide tablet four wide computer column">
+
+			<div class="ui centered card fluid">
+
+				<!-- Header -->
+				<div class="ui menu attached">
+					<div class="ui container">
+						<div class="item item-simple py-1 px-3">
+							<img class="ui avatar image" src="{{post.author_avatar_url}}">
+							<span class="pl-1">{{post.author_username}}</span>
+						</div>
+						<div class="right menu">
+							<div class="ui item-simple simple dropdown item" suiDropdown>
+								<i class="ellipsis vertical icon m-0"></i>
+								<div class="menu" suiDropdownMenu>
+									<a routerLink="/login" class="item" *ngIf="post.isCurrentUserOwner">
+										<i class="edit icon"></i>Edit
+									</a>
+									<a routerLink="/login" class="item" *ngIf="post.isCurrentUserOwner">
+										<i class="trash alternate outline icon"></i>Delete
+									</a>
+									<a href="{{post.raw_image_url}}" target="blank" class="item">
+										<i class="cloud download icon"></i>Download
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Image -->
+				<div class="image">
+					<img src="{{post.thumbnail_url || post.raw_image_url}}" (click)="pageDimmed = !pageDimmed; dimmedPost = post">
+				</div>
+
+				<!-- Content -->
+				<div class="content" *ngIf="post.title || post.description || post.tags.length">
+					<div *ngIf="post.title" class="header py-0">{{post.title}}</div>
+					<div *ngIf="post.description" class="description my-0">{{post.description}}</div>
+					<div *ngIf="post.tags.length" class="mt-1">
+						<a *ngFor="let tag of post.tags" class="ui label small mt-1 ml-0 mr-1 p-1" routerLink="/search/tag">
+							<i class="hashtag icon mr-1"></i>{{tag}}
+						</a>
+					</div>
+				</div>
+
+				<!-- Footer -->
+				<div class="extra content center aligned">
+
+					<!-- Loader -->
+					<div *ngIf="post.isSendingVote">
+						<div class="ui active centered inline loader my-2"></div>
+					</div>
+
+					<!-- Vote Details -->
+					<div *ngIf="!post.isSendingVote">
+						
+						<sui-rating *ngIf="post.isVoted" 
+							class="huge star" 
+							[ngModel]="post.votes_avg" 
+							[maximum]="5" 
+							[isReadonly]="post.isReadonly"></sui-rating>
+
+						<div *ngIf="!post.isVoted" class="date mb-1">
+							Vote here<br>
+							
+							<sui-rating class="massive star" 
+								[ngModel]="0" 
+								[maximum]="5" 
+								(ngModelChange)="setVote(post, $event)"
+							 	[isReadonly]="post.isReadonly"></sui-rating>
+						</div>
+
+						<div class="mt-1" *ngIf="post.isVoted">
+							<span><i class="user icon"></i><b>{{post.votes_n}}</b> Votes</span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<span><i class="chart bar outline icon"></i>Avg: <b>{{post.votes_avg}}</b></span>
+						</div>
+
+						<div class="ui bottom right attached">
+							<span class="meta">{{post.eta}}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<!-- Full screen image -->
+<!-- <sui-dimmer class="ui blurring segment page" [(isDimmed)]="pageDimmed">
+		<div class="ui inverted segment">
+			<img class="ui fluid middle aligned image" src="{{dimmedPost.image_url}}">
+			<div class="content">
+				<div class="header py-0">{{dimmedPost.title}}</div>
+				<div class="description my-0">{{dimmedPost.description}}</div>
+			</div>
+		</div>
+	</sui-dimmer> -->

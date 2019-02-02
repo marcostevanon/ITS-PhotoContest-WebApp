@@ -1,0 +1,3 @@
+.item-simple{ border: none; }
+.item-simple:before{ display: none; }
+img.avatar{ border: 1px solid gainsboro; }
