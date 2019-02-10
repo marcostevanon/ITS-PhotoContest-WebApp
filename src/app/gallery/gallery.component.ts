@@ -16,12 +16,12 @@ export class GalleryComponent implements OnInit {
 
   public imageUploadedConfirmation = false;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService) { }
+
+  ngOnInit() {
     this.loggedUser = this.authService.getUserData();
     this.fetchGalleryPosts();
   }
-
-  ngOnInit() { }
 
   public setVote(post: Post, value) {
     post.isReadonly = true;

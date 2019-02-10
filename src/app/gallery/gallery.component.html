@@ -96,9 +96,9 @@
 				<div class="image">
 					<img src="{{post.thumbnail_url || post.raw_image_url}}" (click)="pageDimmed = !pageDimmed; dimmedPost = post">
 				</div>
-
+				
 				<!-- Content -->
-				<div class="content" *ngIf="post.title || post.description || post.tags.length">
+				<div class="content">
 					<div *ngIf="post.title" class="header py-0">{{post.title}}</div>
 					<div *ngIf="post.description" class="description my-0">{{post.description}}</div>
 					<div *ngIf="post.tags.length" class="mt-1">
@@ -106,7 +106,11 @@
 							<i class="hashtag icon mr-1"></i>{{tag}}
 						</a>
 					</div>
+					<div class="ui right floated">
+						<span class="meta">{{post.eta}}</span>
+					</div>
 				</div>
+				
 
 				<!-- Footer -->
 				<div class="extra content center aligned">
@@ -140,9 +144,6 @@
 							<span><i class="chart bar outline icon"></i>Avg: <b>{{post.votes_avg}}</b></span>
 						</div>
 
-						<div class="ui bottom right attached">
-							<span class="meta">{{post.eta}}</span>
-						</div>
 					</div>
 				</div>
 			</div>
