@@ -1,0 +1,10 @@
+.column { max-width: 500px; }
+hr { border: 1px solid gainsboro; border-radius: 5px; }
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}

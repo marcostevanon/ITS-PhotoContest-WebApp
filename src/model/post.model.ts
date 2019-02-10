@@ -13,9 +13,11 @@ export class Post {
     tags: Array<string>
     votes_n: number
     votes_avg: number
+    score: number
 
     upload_timestamp: string
     eta: string
+    ranking: number
 
     isVoted: boolean // isVoted by the current logged user?
     isReadonly: boolean;
@@ -30,12 +32,13 @@ export class Post {
         this.thumbnail_url = item.thumbnail_url;
         this.title = item.title;
         this.description = item.description;
-        this.tags = item.tags ? item.tags : [];
+        this.tags = item.tags ? JSON.parse(JSON.stringify(item.tags)) : [];
         this.votes_n = item.votes_n;
         this.votes_avg = item.votes_avg;
 
         this.upload_timestamp = item.timestamp;
         this.eta = this.eta = moment(this.upload_timestamp).fromNow();
+        this.score = item.score;
 
         this.isVoted = item.vote ? true : false;
         this.isReadonly = this.isVoted;
@@ -57,4 +60,19 @@ export class PostResponse {
     votes_avg: number
     vote: number
     timestamp: string
+    score: number
+}
+
+export class UploadResponde {
+    image_id: number
+    filename: string
+    url: string
+    uuid: string
+
+    constructor(data) {
+        this.image_id = data.image_id
+        this.filename = data.filename
+        this.url = data.url
+        this.uuid = data.uuid
+    }
 }

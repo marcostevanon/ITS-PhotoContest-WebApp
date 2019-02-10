@@ -1,0 +1,155 @@
+<app-layout></app-layout>
+
+<!--<sui-progress class="top attached purple active" [value]="progress" [autoSuccess]="false"></sui-progress>
+    <sui-progress class="indicating" [value]="progress">Indicating</sui-progress>
+    <sui-progress class="active" [value]="progress">Active</sui-progress>
+    <sui-progress class="warning" [value]="progress">Warning</sui-progress>
+    <sui-progress class="error" [value]="progress">Error</sui-progress>
+    <sui-progress class="tiny" [value]="progress">Tiny (autohides progress)</sui-progress>
+    <sui-progress class="bottom attached indicating active" [value]="progress"></sui-progress> -->
+
+<div class="ui center aligned grid">
+  <div class="column">
+
+    <!-- Gallery Button -->
+    <button class="ui left floated basic icon labeled button" routerLink="/gallery">
+      <i class="long arrow alternate left icon"></i>Gallery
+    </button><br><br>
+
+    <!-- Header -->
+    <h2 class="ui header my-3">
+      <div class="header">Upload new Photo</div>
+    </h2>
+
+    <div class="ui large form">
+      <div class="ui stacked segment">
+
+        <!-- Phase 1 -> File Selection -->
+        <form (ngSubmit)="upload()" *ngIf="!isPhotoUploaded">
+
+          <!-- Old form
+          <div class="field">
+            <label class="ui left aligned ml-2" style="float: left;">Choose File</label>
+            <input type="file" name="image" accept="image/*" enctype="multipart/form-data" ngModel required tabindex="2"
+              (change)="onFileSelection($event)" />
+          </div> -->
+          
+          <div class="field" [class.disabled]="isPhotoUploading">
+            <label for="fileupload" class="ui green basic button mt-2" style="color: white;">
+              <i class="image outline icon"></i>
+              {{selectedFileLabel}}
+            </label>
+            <input type="file" 
+              class="inputfile" 
+              id="fileupload" 
+              name="image" 
+              accept="image/*" 
+              enctype="multipart/form-data"
+              (change)="onFileSelection($event)" />
+          </div>
+
+          <!-- Phase 2 -> Upload Button -->
+          <div class="field">
+            <button type="submit" 
+              class="ui fluid large blue submit button" 
+              [class.loading]="isPhotoUploading"
+              [disabled]="isPhotoUploading || !isPhotoSelected">
+              Upload
+            </button>
+          </div>
+
+        </form>
+
+        <!-- Phase 3 -> Uploading Process -->
+        <sui-progress class="indicating mt-3 mb-0" [value]="progressPercentage" *ngIf="isPhotoUploading"></sui-progress>
+        <div *ngIf="progressPercentage == 100">Please wait...</div>
+
+        <!-- Phase 4 -> Waiting Backend Rendering -->
+        <div *ngIf="isRendering">
+          <sui-message class="ui icon mt-0" [isDismissable]="false">
+            <i class="cog loading icon"></i>
+            <div class="content">
+              <div class="header">We have your image!</div>
+              <p>It will be available within a few seconds, please wait.</p>
+            </div>
+          </sui-message>
+        </div>
+
+        <!-- Phase 5 -> Edit Form -->
+        <form #editForm="ngForm" *ngIf="isRenedringCompleted" (ngSubmit)="edit(editForm)">
+
+          <img class="ui centered aligned medium image mb-2" src="{{uploadedThumbnail}}" />
+
+          <div class="field">
+            <label class="ui left aligned ml-2" style="float: left;">Title</label>
+            <div class="ui left icon input">
+              <i class="user icon"></i>
+              <input type="text" name="title" placeholder="Title" autocomplete="off" tabindex="1" ngModel
+               (keydown.enter)="$event.preventDefault()" [disabled]="isLoadingAutodetecting"/>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="ui left aligned ml-2" style="float: left;">Description</label>
+            <div class="ui left icon input">
+              <i class="align left icon"></i>
+              <input type="text" name="description" placeholder="Description" autocomplete="off" tabindex="2" [(ngModel)]="editDescription" (keydown.enter)="$event.preventDefault()" [disabled]="isLoadingAutodetecting"/>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="ui left aligned ml-2" style="float: left;">Tags</label>
+            <div class="ui left icon input">
+              <i class="tags icon"></i>
+              <input type="text" name="tags" placeholder="Add Tags   [Press Enter to add]" autocomplete="off" tabindex="3" (keydown.enter)="addTag($event)" [disabled]="isLoadingAutodetecting"/>
+            </div>
+          </div>
+
+          <div *ngIf="editTags.length" class="mt-1 mb-3">
+						<a *ngFor="let tag of editTags" class="ui label small mt-1 ml-0 mr-1 p-1">
+							<i class="hashtag icon mr-1"></i>{{tag}}
+						</a>
+          </div>
+          
+          <div class="field" [class.disabled]="isLoadingAutodetecting || autodetectedDone">
+            <button type="button" (click)="autodetectInfos()" class="ui fluid large blue basic submit button" tabindex="4" [class.loading]="isLoadingAutodetecting">
+              <i class="eye icon"></i>
+              Autodetect Description & Tags
+            </button>
+          </div>
+
+          <div class="field" [class.disabled]="isLoadingAutodetecting || isSubmitting">
+            <button type="submit" class="ui fluid large green submit button" tabindex="5" [class.loading]="isSubmitting">
+              Finish Upload
+            </button>
+          </div>
+
+        </form>
+
+        <!-- Phase 6 -> Restart -->
+        <div *ngIf="canUploadAnotherImage">
+        
+          <div class="ui header">Images Uploaded</div>
+          <img class="ui centered aligned medium image mb-2" src="{{uploadedThumbnail}}" />
+        
+          <button type="button" 
+            class="ui fluid large blue submit button" 
+            [disabled]="isLoadingAutodetecting" 
+            (click)="startAgain()">
+            Upload Another Photo
+          </button>
+
+      </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- <sui-message class="attached warning" [isDismissable]="false">
+  <div class="header">
+    Upload before editing!
+  </div>
+  <p>These fields will be available once the photo is uploaded</p>
+</sui-message> -->

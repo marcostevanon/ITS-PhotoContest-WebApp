@@ -12,12 +12,14 @@ import { SuiModule } from 'ng2-semantic-ui';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LayoutComponent } from './layout/layout.component';
+import { UploadComponent } from './upload/upload.component';
 
 const appRoutes: Routes = [
   { path: 'signup', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'gallery', component: GalleryComponent, canActivate: [AuthGuard] },
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'upload', component: UploadComponent, canActivate: [AuthGuard] },
+  { path: '', redirectTo: '/gallery', pathMatch: 'full' },
   // { path: '**', component: PageNotFoundComponent }
 ];
 
@@ -28,14 +30,15 @@ const appRoutes: Routes = [
     LoginComponent,
     RegistrationComponent,
     GalleryComponent,
-    LayoutComponent
+    LayoutComponent,
+    UploadComponent,
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
-		SuiModule,
-		FormsModule,
-		HttpClientModule
+    SuiModule,
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

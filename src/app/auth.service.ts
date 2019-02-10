@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpRequest, HttpResponse, HttpEventType } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { LoginResponse } from 'src/model/loginresponse.model';
 import * as moment from "moment";
@@ -80,6 +80,48 @@ export class AuthService {
         .subscribe(
           (response) => resolve(response),
           (err) => reject(err));
+    })
+  }
+
+  uploadPhoto(file) {
+    var formData = new FormData();
+    formData.append('image', file, file.name);
+
+    const request = new HttpRequest('POST', `${this.base_url}/upload`, formData,
+      {
+        headers: new HttpHeaders({ 'x-access-token': localStorage.getItem('token') }),
+        reportProgress: true
+      })
+
+    return this.http.request(request);
+  }
+
+  checkUpload(photo_id: number) {
+    return new Promise((resolve, reject) => {
+      this.http.get<Array<string>>(`${this.base_url}/upload/check/${photo_id}`, this.getAuthenticatedHeader())
+        .subscribe(
+          (response: Array<string>) => resolve(response),
+          (err) => reject(err));
+    })
+  }
+
+  autodetectInfos(url: string) {
+    return new Promise((resolve, reject) => {
+      this.http.post(`${this.base_url}/upload/cognitive`, { url }, this.getAuthenticatedHeader())
+        .subscribe(
+          (response) => resolve(response),
+          (err) => reject(err));
+    })
+  }
+
+  editImageInfos(image_id: number, title, description, tags) {
+    return new Promise((resolve, reject) => {
+      this.http.post(`${this.base_url}/gallery/edit/${image_id}`,
+        { title, description, tags },
+        this.getAuthenticatedHeader())
+        .subscribe(
+          (response) => resolve(response),
+          (err) => resolve(err));
     })
   }
 
