@@ -32,7 +32,7 @@ export class Post {
         this.thumbnail_url = item.thumbnail_url;
         this.title = item.title;
         this.description = item.description;
-        this.tags = item.tags ? JSON.parse(JSON.stringify(item.tags)) : [];
+        this.tags = item.tags ? item.tags : [];
         this.votes_n = item.votes_n;
         this.votes_avg = item.votes_avg;
 

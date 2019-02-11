@@ -125,6 +125,15 @@ export class AuthService {
     })
   }
 
+  getRanking() {
+    return new Promise((resolve, reject) => {
+      this.http.get<Array<Post>>(`${this.base_url}/gallery/ranking`, this.getAuthenticatedHeader())
+        .subscribe(
+          (response: Array<Post>) => resolve(response),
+          (err) => reject(err));
+    })
+  }
+
 
   //utils
   getExpiration() {

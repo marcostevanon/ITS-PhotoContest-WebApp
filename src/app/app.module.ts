@@ -13,11 +13,13 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LayoutComponent } from './layout/layout.component';
 import { UploadComponent } from './upload/upload.component';
+import { RankingComponent } from './ranking/ranking.component';
 
 const appRoutes: Routes = [
   { path: 'signup', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'gallery', component: GalleryComponent, canActivate: [AuthGuard] },
+  { path: 'ranking', component: RankingComponent, canActivate: [AuthGuard] },
   { path: 'upload', component: UploadComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/gallery', pathMatch: 'full' },
   // { path: '**', component: PageNotFoundComponent }
@@ -32,6 +34,7 @@ const appRoutes: Routes = [
     GalleryComponent,
     LayoutComponent,
     UploadComponent,
+    RankingComponent
   ],
   imports: [
     BrowserModule,
