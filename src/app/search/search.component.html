@@ -20,12 +20,19 @@
           <!-- <div class="results"></div> -->
         </div>
 
-        <div class="ui left aligned segment" *ngIf="byTitleDesc.length > 0 || byTags.length > 0 || byUser.length > 0">
+        <div class="ui left aligned segment"
+          *ngIf="byTitleDesc.length > 0 || byTags.length > 0 || byUser.length > 0 || keyword.value.length > minChar">
 
-          <h3
+          <div class="ui relaxed items"
             *ngIf="byTitleDesc.length == 0 && byTags.length == 0 && byUser.length == 0 && keyword.value.length > minChar">
-            No results
-          </h3>
+
+            <div class="item m-0 mt-1">
+              <div class="middle aligned content">
+                <div class="header">No Result</div>
+                <div class="meta">Keep writing or try to write other words</div>
+              </div>
+            </div>
+          </div>
 
 
           <h3 *ngIf="byTitleDesc.length">Posts</h3>
@@ -56,7 +63,7 @@
                 <div class="descriprion">{{item.description}}</div>
                 <div *ngIf="item.tags.length" class="mt-1">
                   <a *ngFor="let tag of item.tags" class="ui label small mt-1 ml-0 mr-1 p-1"
-                    [class.em]="tag == keyword.value" routerLink="/search/#{{tag}}">
+                    [class.em]="tag.toLowerCase() == keyword.value.toLowerCase()" routerLink="/search/#{{tag}}">
                     <i class="hashtag icon mr-1"></i>{{tag}}
                   </a>
                 </div>
