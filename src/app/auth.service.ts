@@ -6,6 +6,7 @@ import { LoginResponse } from 'src/model/loginresponse.model';
 import * as moment from "moment";
 import { User } from 'src/model/user.model';
 import { Post } from 'src/model/post.model';
+import { SearchResult } from 'src/model/search.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -130,6 +131,15 @@ export class AuthService {
       this.http.get<Array<Post>>(`${this.base_url}/gallery/ranking`, this.getAuthenticatedHeader())
         .subscribe(
           (response: Array<Post>) => resolve(response),
+          (err) => reject(err));
+    })
+  }
+
+  search(keyword: string) {
+    return new Promise((resolve, reject) => {
+      this.http.get<Array<SearchResult>>(`${this.base_url}/search/${keyword}`, this.getAuthenticatedHeader())
+        .subscribe(
+          (response: Array<SearchResult>) => resolve(response),
           (err) => reject(err));
     })
   }

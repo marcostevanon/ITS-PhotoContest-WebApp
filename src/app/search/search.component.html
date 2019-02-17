@@ -1,0 +1,101 @@
+<app-layout></app-layout>
+
+<div class="ui container">
+
+  <div class="ui center aligned grid">
+    <div class="column">
+
+      <!-- Header -->
+      <h2 class="ui header my-3">
+        <div class="header">Search</div>
+      </h2>
+
+      <div class="ui large form">
+
+        <div class="ui search" [class.loading]="isSearching">
+          <div class="ui icon input block">
+            <input #keyword class="prompt" type="text" placeholder="Type to search..." (keyup)="search(keyword.value)">
+            <i class="search icon"></i>
+          </div>
+          <!-- <div class="results"></div> -->
+        </div>
+
+        <div class="ui left aligned segment" *ngIf="byTitleDesc.length > 0 || byTags.length > 0 || byUser.length > 0">
+
+          <h3
+            *ngIf="byTitleDesc.length == 0 && byTags.length == 0 && byUser.length == 0 && keyword.value.length > minChar">
+            No results
+          </h3>
+
+
+          <h3 *ngIf="byTitleDesc.length">Posts</h3>
+          <div class="ui relaxed items" *ngFor="let item of byTitleDesc">
+
+            <div class="item">
+              <div class="ui tiny image">
+                <img src="{{item.thumbnail_url}}">
+              </div>
+              <div class="middle aligned content">
+                <div class="header">{{item.title}}</div>
+                <div class="descriprion">{{item.description}}</div>
+                <div class="meta">Uploaded by: {{item.author_username}}</div>
+              </div>
+            </div>
+          </div>
+
+
+          <h3 *ngIf="byTags.length">Tags</h3>
+          <div class="ui relaxed items" *ngFor="let item of byTags">
+
+            <div class="item">
+              <div class="ui tiny image">
+                <img src="{{item.thumbnail_url}}">
+              </div>
+              <div class="middle aligned content">
+                <div class="header">{{item.title}}</div>
+                <div class="descriprion">{{item.description}}</div>
+                <div *ngIf="item.tags.length" class="mt-1">
+                  <a *ngFor="let tag of item.tags" class="ui label small mt-1 ml-0 mr-1 p-1"
+                    [class.em]="tag == keyword.value" routerLink="/search/#{{tag}}">
+                    <i class="hashtag icon mr-1"></i>{{tag}}
+                  </a>
+                </div>
+                <div class="meta">Uploaded by: {{item.author_username}}</div>
+              </div>
+            </div>
+          </div>
+
+          <h3 *ngIf="byUser.length">Users</h3>
+          <div class="ui relaxed items" *ngFor="let item of byUser">
+
+            <div class="item">
+              <div class="ui tiny image">
+                <img src="{{item.avatar}}">
+              </div>
+              <div class="middle aligned content">
+                <div class="header">{{item.username}}</div>
+                <div class="descriprion">{{item.firstname}} {{item.lastname}}</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="ui center aligned container">
+  <ng-template let-result let-query="query" #template>{{ result.title }} ({{ result.index }})</ng-template>
+  <sui-search [options]="options" optionsField="title" [resultTemplate]="template" [retainSelectedResult]="false"
+    (resultSelected)="alert($event.title)"></sui-search>
+
+  <div class="item">
+    <div class="ui action left icon input">
+      <i class="search icon"></i>
+      <input type="text" placeholder="Search" onkeyup="console.log('object');">
+      <button class="ui button">Search</button>
+    </div>
+  </div>
+</div> -->
