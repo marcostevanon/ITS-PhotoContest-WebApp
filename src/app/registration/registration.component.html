@@ -1,0 +1,142 @@
+<div class="ui middle aligned center aligned grid">
+  <div class="column">
+
+    <!-- Header -->
+    <h2 class="ui blue image header">
+      <img src="assets/logo.png" class="image"><br>
+      <div class="header">ITS Photo Contest</div>
+      <div class="sub header">Registration</div>
+    </h2>
+
+    <form #registrationForm="ngForm" (ngSubmit)="signup(registrationForm)" class="ui large form"
+      [class.loading]="isLoading">
+      <div class="ui stacked segment">
+
+        <div class="two fields">
+
+          <!-- First Name -->
+          <div class="field">
+            <label class="ui left aligned container">First Name</label>
+
+            <div class="ui corner labeled input">
+              <input type="text" name="firstname" placeholder="First Name" autocomplete="off" ngModel required
+                (input)="firstname_error = false" [disabled]="isLoading">
+              <div class="ui corner label"><i class="asterisk icon"></i></div>
+            </div>
+
+            <div class="ui pointing orange fluid basic label" [class.hidden]="!firstname_error">
+              Please enter a Name
+            </div>
+          </div>
+
+          <!-- Last Name -->
+          <div class="field">
+            <label class="ui left aligned container">Last Name</label>
+            <input type="text" name="lastname" placeholder="Last Name" autocomplete="off" ngModel>
+          </div>
+
+        </div>
+
+        <!-- Email field -->
+        <div class="field">
+          <label class="ui left aligned container">E-mail</label>
+
+          <div class="ui corner labeled input">
+            <input type="email" name="email" placeholder="E-mail" autocomplete="off" ngModel required
+              [disabled]="isLoading" (input)="email_error = false">
+            <div class="ui corner label">
+              <i class="asterisk icon"></i>
+            </div>
+
+          </div>
+
+          <!-- Email validation error -->
+          <div class="ui pointing orange fluid basic label" [class.hidden]="!email_error">
+            Please enter a valid E-mail
+          </div>
+        </div>
+
+        <div class="two fields">
+
+          <!-- Username field -->
+          <div class="field">
+            <label class="ui left aligned container">Username</label>
+
+            <div class="ui corner labeled input">
+
+              <input type="text" name="username" placeholder="Username" autocomplete="off" [(ngModel)]="username"
+                required [disabled]="isLoading" (input)="username_error = false">
+              <div class="ui corner label">
+                <i class="asterisk icon"></i>
+              </div>
+            </div>
+
+            <!-- Username validation error -->
+            <div class="ui pointing orange fluid basic label" [class.hidden]="!username_error">
+              Please enter a valid Username
+            </div>
+
+          </div>
+
+          <!-- Password field -->
+          <div class="field">
+            <label class="ui left aligned container">Password</label>
+
+            <div class="ui corner labeled input">
+
+              <input type="password" name="password" placeholder="Password" autocomplete="off" ngModel required
+                (input)="password_error = false" [disabled]="isLoading">
+              <div class="ui corner label">
+                <i class="asterisk icon"></i>
+              </div>
+            </div>
+
+            <!-- Password validation error -->
+            <div class="ui pointing orange fluid basic label" [class.hidden]="!password_error">
+              Please enter a Password
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Avatar -->
+        <div class="field">
+          <label class="ui left aligned container">Avatar Url</label>
+
+          <div class="ui corner labeled input" suiPopup popupPlacement="bottom top"
+            popupText="File upload available in next version">
+
+            <input type="text" name="avatar" placeholder="Avatar Url" autocomplete="off" ngModel [disabled]="isLoading">
+          </div>
+        </div>
+
+        <div class="field" [hidden]="!username_error">
+          <div class="ui celled left aligned list m-0">
+            <div class="item">Username can contain <b>letters</b>, <b>numbers</b><br>or these simbols: <b>-_!*</b></div>
+            <div class="item">Must be <b>lowercase</b></div>
+            <div class="item"><b>Min 3</b> and <b>Max 32</b> character</div>
+          </div>
+        </div>
+
+        <!-- Signup button -->
+        <button type="submit" class="ui fluid large blue submit button" [class.loading]="isLoading"
+          [disabled]="isLoading">
+          Register{{ username ? ' as ' : '' }}<b>{{username}}</b>
+        </button>
+
+        <!-- Response Error -->
+        <div class="ui red fluid basic label mt-2" [class.hidden]="!registration_error">
+          {{registration_error_message}}
+        </div>
+
+        <!-- Registration Completed -->
+        <div class="ui green fluid basic label mt-2" [class.hidden]="!registration_completed">
+          Registration Completed - Go to <a routerLink="/login" [class.disable-link]="isLoading">Login</a>
+        </div>
+      </div>
+    </form>
+
+    <div class="ui message">Already registered? <a routerLink="/login" [class.disable-link]="isLoading">Login</a></div>
+  </div>
+</div>

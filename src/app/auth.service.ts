@@ -31,6 +31,15 @@ export class AuthService {
     });
   }
 
+  signup(user: User) {
+    return new Promise((resolve, reject) => {
+      this.http.post(`${this.base_url}/auth/signup`, user)
+        .subscribe(
+          (response) => resolve(response),
+          (err) => reject(err));
+    })
+  }
+
   private setSession(authResult) {
     const expiresAt = moment().add(authResult.expiresIn, 'second');
 
