@@ -1,27 +1,51 @@
-# Photocontest
+> ## This app is created for EDUCATIONAL PURPOSE ONLY, the data entered may not be protected and it is recommended not to use real or sensitive data
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.2.
+> ## Questa app è creata a SOLO SCOPO EDUCATIVO, i dati inseriti potrebbero non essere protetti e si raccomanda di non utilizzare dati reali o sensibili
+<br>
 
-## Development server
+# ITS PHOTO CONTEST - Client
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## COME UTILIZZARE
+Collegatevi al seguente link:
+[photocontest.marcostevanon.ovh](http://photocontest.marcostevanon.ovh)<br>
+*Per utilizzare l'app è necessario creare un utente*
 
-## Code scaffolding
+---
+Vedi anche [backend](https://github.com/marcostevanon/ITS_PhotoContest-Backend)<br>
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+## TECNOLOGIE UTILIZZATE
+- FRONTEND
+    - ANGULAR
+    - SEMANTIC-UI
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+---
+<br>
 
-## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### LOGIN
+La pagina login contiene una semplice form per l'accesso all'app con token jwt
 
-## Running end-to-end tests
+### REGISTRATION
+La pagina registration permette di creare un nuovo utente per accedere all'app
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+### GALLERY
+La pagina Gallery contiene due elementi principali
+- Lista con un numero limitato di foto per consentire la migliore esperienza utente
+- Un paginatore per navigare attraverso le foto caricate
+- Per ogni immagine è visualizzato:
+    - l'utente che l'ha caricate
+    - la data e l'ora di caricamento
+    - una form per votare in modo semplice la foto con un voto che va da 1 a 5 (è ammesso solo un voto per utente)
 
-## Further help
+### RANKING
+La pagina Ranking contienele prime 5 foto in ordine di rilevanza
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+### UPLOAD FORM 
+Contiene una form per il caricamento di nuove immagini da parte dell'utente loggato
+
+---
+
+## SCREENSHOOT, SHOWCASES AND FLOW SCHEMA
+
+
