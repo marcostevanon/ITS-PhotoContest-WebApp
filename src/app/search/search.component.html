@@ -14,7 +14,8 @@
 
         <div class="ui search" [class.loading]="isSearching">
           <div class="ui icon input block">
-            <input #keyword class="prompt" type="text" placeholder="Type to search..." (keyup)="search(keyword.value)">
+            <input #keyword class="prompt" type="text" placeholder="Type to search..." value="{{formValue}}" autofocus
+              (keyup)="search(keyword.value)">
             <i class="search icon"></i>
           </div>
           <!-- <div class="results"></div> -->
@@ -36,23 +37,7 @@
 
 
           <h3 *ngIf="byTitleDesc.length">Posts</h3>
-          <div class="ui relaxed items" *ngFor="let item of byTitleDesc">
-
-            <div class="item">
-              <div class="ui tiny image">
-                <img src="{{item.thumbnail_url}}">
-              </div>
-              <div class="middle aligned content">
-                <div class="header">{{item.title}}</div>
-                <div class="descriprion">{{item.description}}</div>
-                <div class="meta">Uploaded by: {{item.author_username}}</div>
-              </div>
-            </div>
-          </div>
-
-
-          <h3 *ngIf="byTags.length">Tags</h3>
-          <div class="ui relaxed items" *ngFor="let item of byTags">
+          <div class="ui unstackable relaxed items" *ngFor="let item of byTitleDesc">
 
             <div class="item">
               <div class="ui tiny image">
@@ -63,7 +48,29 @@
                 <div class="descriprion">{{item.description}}</div>
                 <div *ngIf="item.tags.length" class="mt-1">
                   <a *ngFor="let tag of item.tags" class="ui label small mt-1 ml-0 mr-1 p-1"
-                    [class.em]="tag.toLowerCase() == keyword.value.toLowerCase()" routerLink="/search/#{{tag}}">
+                    [class.em]="tag.toLowerCase() == keyword.value.toLowerCase()" [routerLink]="['/search/', tag]">
+                    <i class="hashtag icon mr-1"></i>{{tag}}
+                  </a>
+                </div>
+                <div class="meta">Uploaded by: {{item.author_username}}</div>
+              </div>
+            </div>
+          </div>
+
+
+          <h3 *ngIf="byTags.length">Tags</h3>
+          <div class="ui unstackable relaxed items" *ngFor="let item of byTags">
+
+            <div class="item">
+              <div class="ui tiny image">
+                <img src="{{item.thumbnail_url}}">
+              </div>
+              <div class="middle aligned content">
+                <div class="header">{{item.title}}</div>
+                <div class="descriprion">{{item.description}}</div>
+                <div *ngIf="item.tags.length" class="mt-1">
+                  <a *ngFor="let tag of item.tags" class="ui label small mt-1 ml-0 mr-1 p-1"
+                    [class.em]="tag.toLowerCase() == keyword.value.toLowerCase()" [routerLink]="['/search/', tag]">
                     <i class="hashtag icon mr-1"></i>{{tag}}
                   </a>
                 </div>
@@ -73,7 +80,7 @@
           </div>
 
           <h3 *ngIf="byUser.length">Users</h3>
-          <div class="ui relaxed items" *ngFor="let item of byUser">
+          <div class="ui unstackable relaxed items" *ngFor="let item of byUser">
 
             <div class="item">
               <div class="ui tiny image">

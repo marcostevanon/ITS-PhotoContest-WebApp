@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { SearchResult } from 'src/model/search.model';
-import { Post } from 'src/model/post.model';
+import { ActivatedRoute } from '@angular/router';
+import { Post, PostResponse } from 'src/model/post.model';
 import { User } from 'src/model/user.model';
 
 @Component({
@@ -12,15 +13,25 @@ import { User } from 'src/model/user.model';
 
 export class SearchComponent implements OnInit {
   minChar: number = 2;
-
-  constructor(private authService: AuthService) { }
-
-  ngOnInit() { }
+  formValue: string;
+  loggedUser;
 
   isSearching = false;
   byTitleDesc: Array<Post> = []
   byTags: Array<Post> = []
   byUser: Array<User> = []
+
+  constructor(private route: ActivatedRoute, private authService: AuthService) { }
+
+  ngOnInit() {
+    this.loggedUser = this.authService.getUserData();
+
+    var keyword = this.route.snapshot.params.keyword;
+    if (keyword) {
+      this.formValue = keyword;
+      this.search(keyword);
+    }
+  }
 
   search(keyword: string) {
     if (keyword.length > this.minChar) {
@@ -28,14 +39,13 @@ export class SearchComponent implements OnInit {
 
       this.authService.search(keyword)
         .then((res: SearchResult) => {
+
           this.byTitleDesc = []
           this.byTags = []
-          this.byUser = []
-
-          this.byTitleDesc = res.byTitleDesc.data;
-          this.byTags = res.byTags.data;
-          this.byTags.forEach(item => item.tags = JSON.parse(item.tags))
           this.byUser = res.byUser.data;
+
+          res.byTitleDesc.data.forEach((item: PostResponse) => this.byTitleDesc.push(new Post(item, this.loggedUser)));
+          res.byTags.data.forEach((item: PostResponse) => this.byTags.push(new Post(item, this.loggedUser)));
 
           setTimeout(() => this.isSearching = false, 200)
         })

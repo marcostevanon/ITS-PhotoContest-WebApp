@@ -20,13 +20,10 @@ export class RankingComponent implements OnInit {
     this.authService.getRanking()
       .then((data: Array<PostResponse>) => {
         this.posts = [];
-        data.forEach((item: PostResponse) => {
-          this.posts.push(new Post(item, this.loggedUser));
-        });
-        for (let i = 0; i < this.posts.length; i++) {
+        data.forEach((item: PostResponse) => this.posts.push(new Post(item, this.loggedUser)));
+        for (let i = 0; i < this.posts.length; i++)
           this.posts[i].ranking = (i + 1);
-          this.posts[i].tags = JSON.parse(this.posts[i].tags.toString());
-        }
+
         this.isLoading = false;
       }).catch(err => {
         console.log(err);

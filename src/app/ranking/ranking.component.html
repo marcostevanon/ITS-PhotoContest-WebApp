@@ -1,79 +1,74 @@
 <app-layout></app-layout>
 
-<div class="ui center aligned grid">
-  <div class="ui left aligned column">
+<div class="ui container">
 
-    <!-- Header -->
-    <h2 class="ui center aligned header my-3">
-      <div class="header">Ranking</div>
-    </h2>
+  <div class="ui center aligned grid">
+    <div class="ui left aligned column">
 
-    <div class="ui items">
-      <div class="item" *ngFor="let post of posts">
+      <!-- Header -->
+      <h2 class="ui center aligned header my-3">
+        <div class="header">Ranking</div>
+      </h2>
 
-        <h2 *ngIf="post.ranking == 1" class="ui header pt-2 pr-1">{{post.ranking}}°&nbsp;</h2>
-        <h4 *ngIf="post.ranking != 1" class="ui header pt-2 pr-3">{{post.ranking}}°</h4>
+      <div class="ui unstackable items">
+        <div class="item" *ngFor="let post of posts">
 
-        <div *ngIf="post.ranking == 1" class="ui medium image">
-          <img src="{{post.thumbnail_url}}">
-        </div>
-        <div *ngIf="post.ranking != 1" class="image">
-          <img src="{{post.thumbnail_url}}">
-        </div>
+          <h2 *ngIf="post.ranking == 1" class="ui header pt-2 pr-1">{{post.ranking}}°&nbsp;</h2>
+          <h4 *ngIf="post.ranking != 1" class="ui header pt-2 pr-3">{{post.ranking}}°</h4>
 
-        <div class="content">
+          <div *ngIf="post.ranking == 1" class="ui medium image">
+            <img src="{{post.thumbnail_url}}">
+          </div>
+          <div *ngIf="post.ranking != 1" class="image">
+            <img src="{{post.thumbnail_url}}">
+          </div>
 
-          <div class="ui right floated">
-            <div class="extra content mb-3">
-              <a routerLink="/profile/{{post.author_id}}">
-                <div class="author black">
-                  <img class="ui avatar image" src="{{post.author_avatar_url}}">
-                  {{post.author_username}}
-                </div>
-              </a>
+          <div class="content">
+
+            <!-- Title & Description -->
+            <div *ngIf="post.title" class="header">{{post.title}}</div>
+            <div class="description mt-0" style="word-wrap: break-word;">
+              <p>{{post.description}}</p>
             </div>
-          </div>
 
-          <div *ngIf="post.title" class="header">{{post.title}}</div>
-
-          <div class="description mt-0" style="word-wrap: break-word;">
-            <p>{{post.description}}</p>
-          </div>
-
-
-          <div class="extra">
-            <div *ngIf="post.tags.length" class="mt-1">
-              <a *ngFor="let tag of post.tags" class="ui label small mt-1 ml-0 mr-1 p-1" routerLink="/search/tag">
-                <i class="hashtag icon mr-1"></i>{{tag}}
-              </a>
+            <!-- Tags -->
+            <div class="extra">
+              <div *ngIf="post.tags.length" class="mt-1">
+                <a *ngFor="let tag of post.tags" class="ui label small mt-1 ml-0 mr-1 p-1"
+                  [routerLink]="['/search/', tag]">
+                  <i class="hashtag icon mr-1"></i>{{tag}}
+                </a>
+              </div>
             </div>
-          </div>
 
-          <!-- <div class="meta">
-            <span>score: {{post.score}}</span>
-          </div> -->
-
-          <div class="extra content center aligned">
-            <sui-rating class="huge star" [ngModel]="post.votes_avg" [maximum]="5" [isReadonly]="true"></sui-rating>
-            <div class="mt-1">
-              <span><i class="user icon"></i><b>{{post.votes_n}}</b> Votes</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <!-- Votes & Info -->
+            <div class="extra mt-3">
+              <sui-rating class="huge star" [ngModel]="post.votes_avg" [maximum]="5" [isReadonly]="true"></sui-rating>
+              &nbsp;&nbsp;
+              <span><i class="user icon"></i><b>{{post.votes_n}}</b> Votes</span>&nbsp;&nbsp;
               <span><i class="chart bar outline icon"></i>Avg: <b>{{post.votes_avg}}</b></span>
             </div>
+
+            <!-- Author -->
+            <div class="my-1">
+              Uploaded by: &nbsp;&nbsp;
+              <a class="black" [routerLink]="['/profile/', post.author_id]">
+                <img class="ui avatar image" src="{{post.author_avatar_url}}">
+                {{post.author_username}}
+              </a>
+            </div>
+
+            <span class="meta">{{post.eta}}</span>
           </div>
 
-          <span class="meta">{{post.eta}}</span>
-
-
         </div>
-
-        <div class="ui divider"></div>
       </div>
-    </div>
 
+      <!-- Loading -->
+      <div class="ui active centered inline text loader mt-5" *ngIf="isLoading">
+        <b>Loading...</b>
+      </div>
 
-    <!-- Loading -->
-    <div class="ui active centered inline text loader mt-5" *ngIf="isLoading">
-      <b>Loading...</b>
     </div>
   </div>
 </div>
