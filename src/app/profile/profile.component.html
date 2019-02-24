@@ -54,7 +54,7 @@
               <div class="ui item-simple simple dropdown item" suiDropdown>
                 <i class="ellipsis vertical icon m-0"></i>
                 <div class="menu" suiDropdownMenu>
-                  <a routerLink="/login" class="item" *ngIf="post.isCurrentUserOwner">
+                  <a routerLink="/edit/{{post.post_id}}" class="item" *ngIf="post.isCurrentUserOwner">
                     <i class="edit icon"></i>Edit
                   </a>
                   <a routerLink="/login" class="item" *ngIf="post.isCurrentUserOwner">

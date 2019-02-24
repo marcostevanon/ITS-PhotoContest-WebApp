@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { LoginResponse } from 'src/model/loginresponse.model';
 import * as moment from "moment";
 import { User } from 'src/model/user.model';
-import { Post } from 'src/model/post.model';
+import { Post, PostResponse } from 'src/model/post.model';
 import { SearchResult } from 'src/model/search.model';
 
 @Injectable({ providedIn: 'root' })
@@ -170,6 +170,15 @@ export class AuthService {
       this.http.get(`${this.base_url}/profile/${userid}/images`, this.getAuthenticatedHeader())
         .subscribe(
           (response: Array<Post>) => resolve(response),
+          (err) => reject(err));
+    })
+  }
+
+  getPost(imageid) {
+    return new Promise((resolve, reject) => {
+      this.http.get(`${this.base_url}/gallery/${imageid}`, this.getAuthenticatedHeader())
+        .subscribe(
+          (response: PostResponse) => resolve(response),
           (err) => reject(err));
     })
   }

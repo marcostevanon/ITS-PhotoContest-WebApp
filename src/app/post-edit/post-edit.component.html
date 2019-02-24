@@ -1,0 +1,104 @@
+<app-layout></app-layout>
+
+<div class="ui container">
+
+	<div class="ui center aligned grid">
+
+		<!-- 404 Error -->
+		<div class="ui center aligned basic segment" *ngIf="isErrored && !isLoading">
+			<h2 class="ui header mt-5">
+				<div class="header"><code>403</code><br>You do not have permission<br>to edit this post</div>
+			</h2>
+
+			<!-- Gallery Button -->
+			<button class="ui basic icon labeled button" routerLink="/gallery">
+				<i class="long arrow alternate left icon"></i>Gallery
+			</button><br><br>
+		</div>
+
+		<div class="column" *ngIf="!isErrored && !isLoading">
+
+			<!-- Header -->
+			<h2 class="ui center aligned header my-3">
+				<div class="header">Edit Post</div>
+			</h2>
+
+			<div class="ui large form">
+				<div class="ui stacked segment">
+
+					<form #editForm="ngForm" (ngSubmit)="edit(editForm)">
+
+						<img class="ui centered aligned medium image mb-2" src="{{post.thumbnail_url}}"
+							*ngIf="!isEditedDone" />
+
+						<div class="field" *ngIf="!isEditedDone" [class.disabled]="isSubmitting">
+							<label class="ui left aligned ml-2" style="float: left;">Title</label>
+							<div class="ui left icon input">
+								<i class="user icon"></i>
+								<input type="text" name="title" placeholder="Title" autocomplete="off" tabindex="1"
+									[(ngModel)]="post.title" (keydown.enter)="$event.preventDefault()" />
+							</div>
+						</div>
+
+						<div class="field" *ngIf="!isEditedDone" [class.disabled]="isSubmitting">
+							<label class="ui left aligned ml-2" style="float: left;">Description</label>
+							<div class="ui left icon input">
+								<i class="align left icon"></i>
+								<input type="text" name="description" placeholder="Description" autocomplete="off"
+									[(ngModel)]="post.description" tabindex="2"
+									(keydown.enter)="$event.preventDefault()" [disabled]="isLoadingAutodetecting" />
+							</div>
+						</div>
+
+						<div class="field mb-0" *ngIf="!isEditedDone" [class.disabled]="isSubmitting">
+							<label class="ui left aligned ml-2" style="float: left;">Tags</label>
+							<div class="ui left icon input">
+								<i class="tags icon"></i>
+								<input type="text" name="tags" placeholder="Add Tags   [Press Enter to add]"
+									autocomplete="off" tabindex="3" (keydown.enter)="addTag($event)"
+									[disabled]="isLoadingAutodetecting" />
+							</div>
+
+							<div class="ui grid">
+								<div class="ui left aligned column">
+									<div class="ui small label" style="background: white">Click on tags to remove</div>
+								</div>
+							</div>
+
+						</div>
+
+						<div *ngIf="post.tags.length && !isEditedDone" class="mt-0 mb-3">
+							<a *ngFor="let tag of post.tags" class="ui label small mt-1 ml-0 mr-1 p-1"
+								(click)="deleteTag(tag)">
+								<i class="hashtag icon mr-1"></i>{{tag}}
+							</a>
+						</div>
+
+						<div class="field" [class.disabled]="isSubmitting || isEditedDone">
+							<button type="submit" class="ui fluid large green submit button" tabindex="5"
+								[class.loading]="isSubmitting">
+								<div *ngIf="!isEditedDone">Finish Edit</div>
+								<div *ngIf="isEditedDone">Done
+									<i class="check icon"></i>
+								</div>
+							</button>
+						</div>
+
+						<!-- Gallery Button -->
+						<button class="ui basic icon labeled button" routerLink="/gallery" *ngIf="isEditedDone">
+							<i class="long arrow alternate left icon"></i>Gallery
+						</button>
+
+					</form>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Loading -->
+		<div class="ui active centered inline text loader mt-5" *ngIf="isLoading && !isErrored">
+			<b>Loading...</b>
+		</div>
+
+	</div>
+</div>

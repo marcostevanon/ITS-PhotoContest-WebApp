@@ -16,6 +16,7 @@ import { UploadComponent } from './upload/upload.component';
 import { RankingComponent } from './ranking/ranking.component';
 import { SearchComponent } from './search/search.component';
 import { ProfileComponent } from './profile/profile.component';
+import { PostEditComponent } from './post-edit/post-edit.component';
 
 const appRoutes: Routes = [
   { path: 'signup', component: RegistrationComponent },
@@ -23,7 +24,9 @@ const appRoutes: Routes = [
   { path: 'gallery', component: GalleryComponent, canActivate: [AuthGuard] },
   { path: 'ranking', component: RankingComponent, canActivate: [AuthGuard] },
   { path: 'upload', component: UploadComponent, canActivate: [AuthGuard] },
-  { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
+  { path: 'edit/:imageid', component: PostEditComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always' },
+  { path: 'search', component: SearchComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always' },
+  { path: 'search/:keyword', component: SearchComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always' },
   { path: 'profile/:userid', component: ProfileComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always' },
   { path: '', redirectTo: '/gallery', pathMatch: 'full' },
   // { path: '**', component: PageNotFoundComponent }
@@ -40,11 +43,12 @@ const appRoutes: Routes = [
     UploadComponent,
     RankingComponent,
     SearchComponent,
-    ProfileComponent
+    ProfileComponent,
+    PostEditComponent
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload' }),
     SuiModule,
     FormsModule,
     HttpClientModule
