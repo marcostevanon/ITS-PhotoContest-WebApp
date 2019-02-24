@@ -4,13 +4,14 @@ import { environment } from 'src/environments/environment';
 
 export class Post {
     post_id: number
+    author_id: number
     author_username: string
     author_avatar_url: string
     raw_image_url: string
     thumbnail_url: string
     title: string
     description: string
-    tags: Array<string>
+    tags: Array<string> | string
     votes_n: number
     votes_avg: number
     score: number
@@ -26,6 +27,7 @@ export class Post {
 
     constructor(item: PostResponse, current_user: User) {
         this.post_id = item.post_id;
+        this.author_id = item.author_id;
         this.author_username = item.author_username;
         this.author_avatar_url = item.author_avatar_url ? item.author_avatar_url : environment.default_avatar;
         this.raw_image_url = item.raw_image_url;
@@ -47,15 +49,15 @@ export class Post {
 }
 
 export class PostResponse {
-    //todo rinominare attributi e controllare backend
     post_id: number
+    author_id: number
     author_username: string
     author_avatar_url: string
     raw_image_url: string
     thumbnail_url: string
     title: string
     description: string
-    tags: Array<string>
+    tags: Array<string> | string
     votes_n: number
     votes_avg: number
     vote: number

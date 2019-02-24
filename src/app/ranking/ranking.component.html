@@ -24,11 +24,13 @@
         <div class="content">
 
           <div class="ui right floated">
-            <div class="extra content mb-3" style="color: black">
-              <div class="author">
-                <img class="ui avatar image" src="{{post.author_avatar_url}}">
-                {{post.author_username}}
-              </div>
+            <div class="extra content mb-3">
+              <a routerLink="/profile/{{post.author_id}}">
+                <div class="author black">
+                  <img class="ui avatar image" src="{{post.author_avatar_url}}">
+                  {{post.author_username}}
+                </div>
+              </a>
             </div>
           </div>
 
@@ -61,11 +63,17 @@
 
           <span class="meta">{{post.eta}}</span>
 
-          
+
         </div>
 
         <div class="ui divider"></div>
       </div>
+    </div>
+
+
+    <!-- Loading -->
+    <div class="ui active centered inline text loader mt-5" *ngIf="isLoading">
+      <b>Loading...</b>
     </div>
   </div>
 </div>

@@ -9,7 +9,7 @@
 
 	<!-- Refresh Button -->
 	<button class="ui basic icon labeled button" (click)=" fetchGalleryPosts()" [class.loading]="isGalleryListLoading"
-	 [disabled]="isGalleryListLoading">
+		[disabled]="isGalleryListLoading">
 		<i class="sync icon"></i>Refresh
 	</button><br><br>
 
@@ -24,7 +24,8 @@
 	<!-- Gallery placeholder when loading -->
 	<div class="ui grid" *ngIf="isGalleryListLoading">
 
-		<div *ngFor="let i of placeholderPrefetchingArray" class="sixteen wide mobile eight wide tablet four wide computer column">
+		<div *ngFor="let i of placeholderPrefetchingArray"
+			class="sixteen wide mobile eight wide tablet four wide computer column">
 			<div class="ui centered card fluid">
 
 				<!-- Header -->
@@ -61,17 +62,17 @@
 	<!-- Gallery List -->
 	<div class="ui grid" *ngIf="!isGalleryListLoading">
 
-		<!-- GALLERY LIST -->
 		<div *ngFor="let post of posts" class="sixteen wide mobile eight wide tablet four wide computer column">
 
 			<div class="ui centered card fluid">
-
 				<!-- Header -->
 				<div class="ui menu attached">
 					<div class="ui container">
 						<div class="item item-simple py-1 px-3">
-							<img class="ui avatar image" src="{{post.author_avatar_url}}">
-							<span class="pl-1">{{post.author_username}}</span>
+							<a routerLink="/profile/{{post.author_id}}">
+								<img class="ui avatar image" src="{{post.author_avatar_url}}">
+								<span class="pl-1 black">{{post.author_username}}</span>
+							</a>
 						</div>
 						<div class="right menu">
 							<div class="ui item-simple simple dropdown item" suiDropdown>
@@ -94,15 +95,17 @@
 
 				<!-- Image -->
 				<div class="image">
-					<img src="{{post.thumbnail_url || post.raw_image_url}}" (click)="pageDimmed = !pageDimmed; dimmedPost = post">
+					<img src="{{post.thumbnail_url || post.raw_image_url}}"
+						(click)="pageDimmed = !pageDimmed; dimmedPost = post">
 				</div>
-				
+
 				<!-- Content -->
 				<div class="content">
 					<div *ngIf="post.title" class="header py-0">{{post.title}}</div>
 					<div *ngIf="post.description" class="description my-0">{{post.description}}</div>
 					<div *ngIf="post.tags.length" class="mt-1">
-						<a *ngFor="let tag of post.tags" class="ui label small mt-1 ml-0 mr-1 p-1" routerLink="/search/tag">
+						<a *ngFor="let tag of post.tags" class="ui label small mt-1 ml-0 mr-1 p-1"
+							routerLink="/search/tag">
 							<i class="hashtag icon mr-1"></i>{{tag}}
 						</a>
 					</div>
@@ -110,7 +113,7 @@
 						<span class="meta">{{post.eta}}</span>
 					</div>
 				</div>
-				
+
 
 				<!-- Footer -->
 				<div class="extra content center aligned">
@@ -122,21 +125,15 @@
 
 					<!-- Vote Details -->
 					<div *ngIf="!post.isSendingVote">
-						
-						<sui-rating *ngIf="post.isVoted" 
-							class="huge star" 
-							[ngModel]="post.votes_avg" 
-							[maximum]="5" 
+
+						<sui-rating *ngIf="post.isVoted" class="huge star" [ngModel]="post.votes_avg" [maximum]="5"
 							[isReadonly]="post.isReadonly"></sui-rating>
 
 						<div *ngIf="!post.isVoted" class="date mb-1">
 							Vote here<br>
-							
-							<sui-rating class="massive star" 
-								[ngModel]="0" 
-								[maximum]="5" 
-								(ngModelChange)="setVote(post, $event)"
-							 	[isReadonly]="post.isReadonly"></sui-rating>
+
+							<sui-rating class="massive star" [ngModel]="0" [maximum]="5"
+								(ngModelChange)="setVote(post, $event)" [isReadonly]="post.isReadonly"></sui-rating>
 						</div>
 
 						<div class="mt-1" *ngIf="post.isVoted">

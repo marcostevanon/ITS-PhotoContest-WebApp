@@ -9,6 +9,7 @@ import { User } from 'src/model/user.model';
   styleUrls: ['./ranking.component.css']
 })
 export class RankingComponent implements OnInit {
+  isLoading: boolean = true;
 
   public posts: Array<Post> = [];
   public loggedUser: User;
@@ -26,7 +27,10 @@ export class RankingComponent implements OnInit {
           this.posts[i].ranking = (i + 1);
           this.posts[i].tags = JSON.parse(this.posts[i].tags.toString());
         }
-
-      }).catch(err => console.log(err))
+        this.isLoading = false;
+      }).catch(err => {
+        console.log(err);
+        this.isLoading = false;
+      })
   }
 }

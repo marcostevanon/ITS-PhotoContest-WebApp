@@ -153,6 +153,26 @@ export class AuthService {
     })
   }
 
+  getProfileData(userid) {
+    return new Promise((resolve, reject) => {
+      this.http.get(`${this.base_url}/profile/${userid}`, this.getAuthenticatedHeader())
+        .subscribe(
+          (response: User) => {
+            if (!response.avatar) response.avatar = environment.default_avatar;
+            resolve(response)
+          },
+          (err) => reject(err));
+    })
+  }
+
+  getProfileImageList(userid) {
+    return new Promise((resolve, reject) => {
+      this.http.get(`${this.base_url}/profile/${userid}/images`, this.getAuthenticatedHeader())
+        .subscribe(
+          (response: Array<Post>) => resolve(response),
+          (err) => reject(err));
+    })
+  }
 
   //utils
   getExpiration() {

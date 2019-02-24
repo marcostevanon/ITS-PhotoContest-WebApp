@@ -1,0 +1,95 @@
+<app-layout></app-layout>
+
+<div class="ui container">
+
+  <div class="ui center aligned grid">
+
+    <!-- 404 Error -->
+    <div class="ui center aligned basic segment" *ngIf="isErrored">
+      <h2 class="ui header mt-5">
+        <div class="header"><code>404</code><br>User does not exist</div>
+      </h2>
+
+      <!-- Gallery Button -->
+      <button class="ui basic icon labeled button" routerLink="/gallery">
+        <i class="long arrow alternate left icon"></i>Gallery
+      </button><br><br>
+    </div>
+
+    <!-- Profile Information -->
+    <div class="column" *ngIf="userData && !isErrored">
+
+      <!-- Header - Full Name -->
+      <img class="ui small circular center aligned image mt-3" src="{{userData.avatar}}"/>
+
+      <h2 class="ui header mt-1">
+        <div class="header">{{userData.firstname}} {{userData.lastname}}</div>
+        <div class="sub header">{{userData.username}}</div>
+      </h2>
+
+    </div>
+  </div>
+
+
+  <!-- Gallery List -->
+  <div class="ui grid">
+
+    <div *ngFor="let post of imageList" class="sixteen wide mobile eight wide tablet four wide computer column">
+
+      <div class="ui centered card fluid">
+        <!-- Header -->
+        <div class="ui menu attached">
+          <div class="ui container">
+            <div class="item item-simple py-1 px-3">
+              <img class="ui avatar image" src="{{post.author_avatar_url}}">
+              <span class="pl-1 black">{{post.author_username}}</span>
+            </div>
+            <div class="right menu">
+              <div class="ui item-simple simple dropdown item" suiDropdown>
+                <i class="ellipsis vertical icon m-0"></i>
+                <div class="menu" suiDropdownMenu>
+                  <a routerLink="/login" class="item" *ngIf="post.isCurrentUserOwner">
+                    <i class="edit icon"></i>Edit
+                  </a>
+                  <a routerLink="/login" class="item" *ngIf="post.isCurrentUserOwner">
+                    <i class="trash alternate outline icon"></i>Delete
+                  </a>
+                  <a href="{{post.raw_image_url}}" target="blank" class="item">
+                    <i class="cloud download icon"></i>Download
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Image -->
+        <div class="image">
+          <img src="{{post.thumbnail_url || post.raw_image_url}}" (click)="pageDimmed = !pageDimmed; dimmedPost = post">
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+          <div *ngIf="post.title" class="header py-0">{{post.title}}</div>
+          <div *ngIf="post.description" class="description my-0">{{post.description}}</div>
+          <div *ngIf="post.tags.length" class="mt-1">
+            <a *ngFor="let tag of post.tags" class="ui label small mt-1 ml-0 mr-1 p-1" routerLink="/search/tag">
+              <i class="hashtag icon mr-1"></i>{{tag}}
+            </a>
+          </div>
+          <div class="ui right floated">
+            <span class="meta">{{post.eta}}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Loading -->
+  <div class="ui active centered inline text loader mt-5" *ngIf="isLoading && !isErrored">
+    <b>Loading...</b>
+  </div>
+
+</div>
