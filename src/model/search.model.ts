@@ -1,9 +1,9 @@
-import { Post } from './post.model';
+import { PostResponse } from './post.model';
 import { User } from './user.model';
 
 export class SearchResult {
-    byTitleDesc: SearchItem<Post>
-    byTags: SearchItem<Post>
+    byTitleDesc: SearchItem<PostResponse>
+    byTags: SearchItem<PostResponse>
     byUser: SearchItem<User>
 }
 

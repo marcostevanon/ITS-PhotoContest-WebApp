@@ -11,7 +11,7 @@ export class Post {
     thumbnail_url: string
     title: string
     description: string
-    tags: Array<string> | string
+    tags: Array<string>
     votes_n: number
     votes_avg: number
     score: number
@@ -34,7 +34,10 @@ export class Post {
         this.thumbnail_url = item.thumbnail_url;
         this.title = item.title;
         this.description = item.description;
-        this.tags = item.tags ? item.tags : [];
+        if (typeof item.tags === 'string')
+            this.tags = JSON.parse(item.tags);
+        else
+            this.tags = item.tags ? item.tags : [];
         this.votes_n = item.votes_n;
         this.votes_avg = item.votes_avg;
 
