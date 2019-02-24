@@ -137,8 +137,14 @@ export class UploadComponent implements OnInit {
     }
   }
 
+  deleteTag(event) {
+    if (!this.isSubmitting) {
+      var index = this.editTags.indexOf(event);
+      if (index > -1) this.editTags.splice(index, 1);
+    }
+  }
+
   edit(form: NgForm) {
-    //manca l'image id da inserire nella variabile globale e da riprendere qui
     var image_id = this.uploadedImageId;
     var title = form.value.title;
     var description = form.value.description;

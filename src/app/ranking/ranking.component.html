@@ -10,7 +10,7 @@
         <div class="header">Ranking</div>
       </h2>
 
-      <div class="ui unstackable items">
+      <div class="ui unstackable divided items">
         <div class="item" *ngFor="let post of posts">
 
           <h2 *ngIf="post.ranking == 1" class="ui header pt-2 pr-1">{{post.ranking}}°&nbsp;</h2>
