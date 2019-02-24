@@ -16,11 +16,12 @@
       </button><br><br>
     </div>
 
+
     <!-- Profile Information -->
     <div class="column" *ngIf="userData && !isErrored">
 
       <!-- Header - Full Name -->
-      <img class="ui small circular center aligned image mt-3" src="{{userData.avatar}}"/>
+      <img class="ui small circular center aligned image mt-3" src="{{userData.avatar}}" />
 
       <h2 class="ui header mt-1">
         <div class="header">{{userData.firstname}} {{userData.lastname}}</div>
@@ -30,6 +31,11 @@
     </div>
   </div>
 
+
+
+  <h3 class="ui centered header mt-5" *ngIf="!isLoading && !imageList.length">
+    <div class="sub header"><b>{{userData.firstname}} {{userData.lastname}}</b> has not uploaded any pictures yet</div>
+  </h3>
 
   <!-- Gallery List -->
   <div class="ui grid">
