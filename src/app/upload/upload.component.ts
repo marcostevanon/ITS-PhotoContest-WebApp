@@ -85,7 +85,6 @@ export class UploadComponent implements OnInit {
   checkIfRenderingIsCompleted(data) {
     this.authService.checkUpload(data.image_id)
       .then((res: { status: string, resized_image_url: string }) => {
-        // console.log(res);
         if (res.status == "uploaded") {
           this.isRenedringCompleted = true;
           this.isRendering = false;
@@ -95,7 +94,7 @@ export class UploadComponent implements OnInit {
             this.checkIfRenderingIsCompleted(data);
           }, 1000)
         }
-      }).catch(err => console.log(err))
+      }).catch(console.log)
   }
 
   phase3() {

@@ -31,14 +31,12 @@ export class GalleryComponent implements OnInit {
 
       this.authService.setVote(post.post_id, value)
         .then((response: PostResponse) => {
-          console.log(response);
           post.votes_avg = response.votes_avg;
           post.votes_n = response.votes_n;
 
           post.isSendingVote = false;
           post.isVoted = true;
-          console.log(post);
-        }).catch(err => console.log(err))
+        }).catch(console.log)
 
     }, 300)
   }
@@ -54,7 +52,7 @@ export class GalleryComponent implements OnInit {
         });
 
         this.isGalleryListLoading = false;
-      }).catch(err => console.log(err))
+      }).catch(console.log)
   }
 
   // public pageDimmed: boolean = false;

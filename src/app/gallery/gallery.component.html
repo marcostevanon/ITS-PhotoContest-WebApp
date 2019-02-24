@@ -105,7 +105,7 @@
 					<div *ngIf="post.description" class="description my-0">{{post.description}}</div>
 					<div *ngIf="post.tags.length" class="mt-1">
 						<a *ngFor="let tag of post.tags" class="ui label small mt-1 ml-0 mr-1 p-1"
-							routerLink="/search/tag">
+							[routerLink]="['/search/', tag]">
 							<i class="hashtag icon mr-1"></i>{{tag}}
 						</a>
 					</div>
