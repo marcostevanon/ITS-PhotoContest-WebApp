@@ -13,6 +13,7 @@ export class GalleryComponent implements OnInit {
   public placeholderPrefetchingArray = new Array(4).fill(0);
   public loggedUser: User;
   public posts: Array<Post> = [];
+  toDeletePost: Post;
 
   public imageUploadedConfirmation = false;
 
@@ -37,8 +38,14 @@ export class GalleryComponent implements OnInit {
           post.isSendingVote = false;
           post.isVoted = true;
         }).catch(console.log)
-
     }, 300)
+  }
+
+
+  deletePost() {
+    this.authService.deletePost(this.toDeletePost.post_id)
+      .then(data => this.fetchGalleryPosts())
+      .catch(err => { this.fetchGalleryPosts(); console.log(err); })
   }
 
   public fetchGalleryPosts() {
@@ -47,10 +54,7 @@ export class GalleryComponent implements OnInit {
     this.authService.getGallery()
       .then((data: Array<PostResponse>) => {
         this.posts = [];
-        data.forEach((item: PostResponse) => {
-          this.posts.push(new Post(item, this.loggedUser));
-        });
-
+        data.forEach((item: PostResponse) => this.posts.push(new Post(item, this.loggedUser)));
         this.isGalleryListLoading = false;
       }).catch(console.log)
   }

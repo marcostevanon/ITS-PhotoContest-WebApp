@@ -8,6 +8,8 @@ import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { GalleryComponent } from './gallery/gallery.component';
 
+import { NgSemanticModule } from 'ng-semantic';
+
 import { SuiModule } from 'ng2-semantic-ui';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -50,6 +52,7 @@ const appRoutes: Routes = [
     BrowserModule,
     RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload' }),
     SuiModule,
+    NgSemanticModule,
     FormsModule,
     HttpClientModule
   ],

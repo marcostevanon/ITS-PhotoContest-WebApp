@@ -183,6 +183,15 @@ export class AuthService {
     })
   }
 
+  deletePost(imageid) {
+    return new Promise((resolve, reject) => {
+      this.http.delete(`${this.base_url}/gallery/${imageid}`, this.getAuthenticatedHeader())
+        .subscribe(
+          (response) => resolve(response),
+          (err) => reject(err));
+    })
+  }
+
   //utils
   getExpiration() {
     const expiration = localStorage.getItem("expires_at");
