@@ -112,8 +112,8 @@ export class UploadComponent implements OnInit {
   autodetectInfos() {
     this.isLoadingAutodetecting = true;
     this.authService.autodetectInfos(this.uploadedThumbnail)
-      .then((res: string) => {
-        var desc = JSON.parse(res).description;
+      .then((res: JSON) => {
+        var desc = JSON.parse(JSON.stringify(res)).description;
 
         if (desc.captions.length)
           this.editDescription = desc.captions[0].text;
@@ -126,7 +126,7 @@ export class UploadComponent implements OnInit {
         this.autodetectedDone = true;
         this.isLoadingAutodetecting = false;
       })
-      .catch(err => this.isLoadingAutodetecting = false)
+      .catch(err => { this.isLoadingAutodetecting = false; console.log(err); })
   }
 
   addTag(event) {
