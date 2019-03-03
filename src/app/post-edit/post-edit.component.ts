@@ -30,9 +30,8 @@ export class PostEditComponent implements OnInit {
         this.isLoading = false;
         console.log(this.post);
       })
-      .catch(err => { this.isErrored = true; console.log(err); })
+      .catch(err => { this.isErrored = true; this.isLoading = false; console.log(err); })
   }
-
 
   addTag(event) {
     event.preventDefault();
