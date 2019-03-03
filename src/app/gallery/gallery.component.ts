@@ -42,11 +42,11 @@ export class GalleryComponent implements OnInit {
   }
 
 
-  deletePost() {
-    this.authService.deletePost(this.toDeletePost.post_id)
-      .then(data => this.fetchGalleryPosts())
-      .catch(err => { this.fetchGalleryPosts(); console.log(err); })
-  }
+  // deletePost() {
+  //   this.authService.deletePost(this.toDeletePost.post_id)
+  //     .then(data => this.fetchGalleryPosts())
+  //     .catch(err => { this.fetchGalleryPosts(); console.log(err); })
+  // }
 
   public fetchGalleryPosts() {
     this.isGalleryListLoading = true;

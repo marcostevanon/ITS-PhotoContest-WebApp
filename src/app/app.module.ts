@@ -8,8 +8,6 @@ import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { GalleryComponent } from './gallery/gallery.component';
 
-import { NgSemanticModule } from 'ng-semantic';
-
 import { SuiModule } from 'ng2-semantic-ui';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -19,6 +17,7 @@ import { RankingComponent } from './ranking/ranking.component';
 import { SearchComponent } from './search/search.component';
 import { ProfileComponent } from './profile/profile.component';
 import { PostEditComponent } from './post-edit/post-edit.component';
+import { GalleryItemComponent } from './gallery-item/gallery-item.component';
 
 const appRoutes: Routes = [
   { path: 'signup', component: RegistrationComponent },
@@ -46,13 +45,13 @@ const appRoutes: Routes = [
     RankingComponent,
     SearchComponent,
     ProfileComponent,
-    PostEditComponent
+    PostEditComponent,
+    GalleryItemComponent,
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload' }),
     SuiModule,
-    NgSemanticModule,
     FormsModule,
     HttpClientModule
   ],

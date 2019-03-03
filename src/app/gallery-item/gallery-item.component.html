@@ -1,0 +1,99 @@
+<div class="ui centered card fluid">
+
+  <!-- Header -->
+  <div class="ui menu attached">
+    <div class="ui container">
+
+      <!-- User Info -->
+      <div class="item item-simple py-1 px-3">
+        <a routerLink="/profile/{{post.author_id}}">
+          <img class="ui avatar image" src="{{post.author_avatar_url}}">
+          <span class="pl-1 black">{{post.author_username}}</span>
+        </a>
+      </div>
+
+      <!-- Action Menu -->
+      <div class="right menu">
+        <div class="ui item-simple simple dropdown item" suiDropdown>
+          <i class="ellipsis vertical icon m-0"></i>
+          <div class="menu" suiDropdownMenu>
+
+            <!-- Show only if the user is the post owner -->
+            <div *ngIf="post.isCurrentUserOwner">
+
+              <!-- Edit Post -->
+              <a routerLink="/edit/{{post.post_id}}" class="item">
+                <i class="edit icon"></i>Edit
+              </a>
+
+              <!-- Delete Post -->
+              <a class="item">
+                <i class="trash alternate outline icon"></i>Delete
+              </a>
+            </div>
+
+            <!-- Download Image -->
+            <a href="{{post.raw_image_url}}" target="blank" class="item">
+              <i class="cloud download icon"></i>Download
+            </a>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Post Image -->
+  <div class="image">
+    <img src="{{post.thumbnail_url || post.raw_image_url}}" (click)="pageDimmed = !pageDimmed; dimmedPost = post">
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <div *ngIf="post.title" class="header py-0">{{post.title}}</div>
+    <div *ngIf="post.description" class="description my-0">{{post.description}}</div>
+    <div *ngIf="post.tags.length" class="mt-1">
+      <a *ngFor="let tag of post.tags" class="ui label small mt-1 ml-0 mr-1 p-1" [routerLink]="['/search/', tag]">
+        <i class="hashtag icon mr-1"></i>{{tag}}
+      </a>
+    </div>
+
+    <div class="ui right floated">
+      <span class="meta">{{post.eta}}</span>
+    </div>
+
+  </div>
+
+
+  <!-- Footer -->
+  <div class="extra content center aligned">
+
+    <!-- Loader -->
+    <div *ngIf="post.isSendingVote">
+      <div class="ui active centered inline loader my-2"></div>
+    </div>
+
+    <div *ngIf="!post.isSendingVote">
+
+      <!-- Vote Details -->
+      <sui-rating *ngIf="post.isVoted" class="huge star" [ngModel]="post.votes_avg" [maximum]="5"
+        [isReadonly]="post.isReadonly"></sui-rating>
+
+      <div *ngIf="!post.isVoted" class="date mb-1">
+        Vote here
+        <br>
+        <sui-rating class="massive star" [ngModel]="0" [maximum]="5" (ngModelChange)="setVote(post, $event)"
+          [isReadonly]="post.isReadonly"></sui-rating>
+      </div>
+
+      <div class="mt-1" *ngIf="post.isVoted">
+        <span><i class="user icon"></i><b>{{post.votes_n}}</b> Votes</span>&nbsp;&nbsp;&nbsp;&nbsp;
+        <span><i class="chart bar outline icon"></i>Avg: <b>{{post.votes_avg}}</b></span>
+      </div>
+
+    </div>
+  </div>
+  
+</div>
