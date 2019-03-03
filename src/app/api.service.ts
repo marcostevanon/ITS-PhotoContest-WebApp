@@ -16,146 +16,123 @@ export class ApiService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  // Authentication Requests
-  login(username: string, password: string) {
-
-    return new Promise((resolve, reject) => {
-      this.http.post<LoginResponse>(`${this.base_url}/auth/login`, { username, password }, this.defaultHeader)
-        .subscribe(authResult => {
-          this.setSession(authResult);
-          this.router.navigateByUrl(this.redirectUrl || '/gallery');
-          resolve();
-        }, err => {
-          reject({ status: err.status, message: err.error.message || err.statusText })
-        });
-    });
-  }
-
-  signup(user: User) {
-    return new Promise((resolve, reject) => {
-      this.http.post(`${this.base_url}/auth/signup`, user)
-        .subscribe(
-          (response) => resolve(response),
-          (err) => reject(err));
-    })
-  }
-
-  private setSession(authResult) {
+  // Session Functions
+  private _setSession(authResult) {
     const expiresAt = moment().add(authResult.expiresIn, 'second');
-
     localStorage.setItem('token', authResult.token);
     localStorage.setItem("expires_at", JSON.stringify(expiresAt.valueOf()));
     localStorage.setItem('userdata', JSON.stringify(authResult.user))
   }
 
-  isLoggedIn() {
-    return moment().isBefore(this.getExpiration());
+  private _getExpiration() {
+    const expiration = localStorage.getItem("expires_at");
+    const expiresAt = JSON.parse(expiration);
+    return moment(expiresAt);
   }
 
-  logout() {
+  private _getAuthenticatedHeader(): object {
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'x-access-token': localStorage.getItem('token')
+      })
+    }
+  }
+
+  public isLoggedIn() {
+    return moment().isBefore(this._getExpiration());
+  }
+
+  public logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("expires_at");
     localStorage.removeItem('userdata');
     this.router.navigateByUrl('/login');
   }
 
-  getUserData(): User {
+  public getUserData(): User {
     var user: User = JSON.parse(localStorage.getItem('userdata'))
     if (!user.avatar) user.avatar = environment.default_avatar;
     return user;
   }
 
-  // API REQUEST
-  getGallery() {
+
+  // Authentication Requests
+  public login(username: string, password: string) {
+    const body = { username, password };
     return new Promise((resolve, reject) => {
-      this.http.get<Array<Post>>(`${this.base_url}/gallery`, this.getAuthenticatedHeader())
+      this.http.post<LoginResponse>(`${this.base_url}/auth/login`, body, this.defaultHeader)
         .subscribe(
-          (response: Array<Post>) => resolve(response),
-          (err) => reject(err));
-    })
+          (authResult) => {
+            this._setSession(authResult);
+            this.router.navigateByUrl(this.redirectUrl || '/gallery');
+            resolve();
+          },
+          (err) => reject({ status: err.status, message: err.error.message || err.statusText }));
+    });
   }
 
-  getAuthenticatedHeader(): object {
-    return { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'x-access-token': localStorage.getItem('token') }) }
-  }
-
-  setVote(post_id, vote_value) {
+  public signup(user: User) {
+    const body = user;
     return new Promise((resolve, reject) => {
-      this.http.post<Array<Post>>(`${this.base_url}/vote`,
-        {
-          image_id: post_id,
-          user_id: this.getUserData().id,
-          value: vote_value
-        }, this.getAuthenticatedHeader())
+      this.http.post(`${this.base_url}/auth/signup`, body)
         .subscribe(
           (response) => resolve(response),
           (err) => reject(err));
     })
   }
 
-  uploadPhoto(file) {
-    var formData = new FormData();
-    formData.append('image', file, file.name);
 
-    const request = new HttpRequest('POST', `${this.base_url}/upload`, formData,
-      {
-        headers: new HttpHeaders({ 'x-access-token': localStorage.getItem('token') }),
-        reportProgress: true
-      })
-
-    return this.http.request(request);
+  // GET Requests
+  public getGallery() {
+    return new Promise((resolve, reject) => {
+      this.http.get<Array<Post>>(`${this.base_url}/gallery`, this._getAuthenticatedHeader())
+        .subscribe(
+          (response: Array<Post>) => resolve(response),
+          (err) => reject(err));
+    })
   }
 
-  checkUpload(photo_id: number) {
+  public checkUpload(photo_id: number) {
     return new Promise((resolve, reject) => {
-      this.http.get<Array<string>>(`${this.base_url}/upload/check/${photo_id}`, this.getAuthenticatedHeader())
+      this.http.get<Array<string>>(`${this.base_url}/upload/check/${photo_id}`, this._getAuthenticatedHeader())
         .subscribe(
           (response: Array<string>) => resolve(response),
           (err) => reject(err));
     })
   }
 
-  autodetectInfos(url: string) {
+  public autoDetectInfos(url: string) {
+    var body = { url }
     return new Promise((resolve, reject) => {
-      this.http.post(`${this.base_url}/upload/cognitive`, { url }, this.getAuthenticatedHeader())
+      this.http.post(`${this.base_url}/upload/cognitive`, body, this._getAuthenticatedHeader())
         .subscribe(
           (response) => resolve(response),
           (err) => reject(err));
     })
   }
 
-  editImageInfos(image_id: number, title, description, tags) {
+  public getRanking() {
     return new Promise((resolve, reject) => {
-      this.http.post(`${this.base_url}/gallery/edit/${image_id}`,
-        { title, description, tags },
-        this.getAuthenticatedHeader())
-        .subscribe(
-          (response) => resolve(response),
-          (err) => resolve(err));
-    })
-  }
-
-  getRanking() {
-    return new Promise((resolve, reject) => {
-      this.http.get<Array<Post>>(`${this.base_url}/gallery/ranking`, this.getAuthenticatedHeader())
+      this.http.get<Array<Post>>(`${this.base_url}/gallery/ranking`, this._getAuthenticatedHeader())
         .subscribe(
           (response: Array<Post>) => resolve(response),
           (err) => reject(err));
     })
   }
 
-  search(keyword: string) {
+  public search(keyword: string) {
     return new Promise((resolve, reject) => {
-      this.http.get<Array<SearchResult>>(`${this.base_url}/search/${keyword}`, this.getAuthenticatedHeader())
+      this.http.get<Array<SearchResult>>(`${this.base_url}/search/${keyword}`, this._getAuthenticatedHeader())
         .subscribe(
           (response: Array<SearchResult>) => resolve(response),
           (err) => reject(err));
     })
   }
 
-  getProfileData(userid) {
+  public getProfileData(userid) {
     return new Promise((resolve, reject) => {
-      this.http.get(`${this.base_url}/profile/${userid}`, this.getAuthenticatedHeader())
+      this.http.get(`${this.base_url}/profile/${userid}`, this._getAuthenticatedHeader())
         .subscribe(
           (response: User) => {
             if (!response.avatar) response.avatar = environment.default_avatar;
@@ -165,37 +142,70 @@ export class ApiService {
     })
   }
 
-  getProfileImageList(userid) {
+  public getProfileImageList(userid) {
     return new Promise((resolve, reject) => {
-      this.http.get(`${this.base_url}/profile/${userid}/images`, this.getAuthenticatedHeader())
+      this.http.get(`${this.base_url}/profile/${userid}/images`, this._getAuthenticatedHeader())
         .subscribe(
           (response: Array<Post>) => resolve(response),
           (err) => reject(err));
     })
   }
 
-  getPost(imageid) {
+  public getPost(imageid) {
     return new Promise((resolve, reject) => {
-      this.http.get(`${this.base_url}/gallery/${imageid}`, this.getAuthenticatedHeader())
+      this.http.get(`${this.base_url}/gallery/${imageid}`, this._getAuthenticatedHeader())
         .subscribe(
           (response: PostResponse) => resolve(response),
           (err) => reject(err));
     })
   }
 
-  deletePost(imageid) {
+
+  // POST Requests
+  public setVote(post_id, vote_value) {
+    var body = {
+      image_id: post_id,
+      user_id: this.getUserData().id,
+      value: vote_value
+    }
     return new Promise((resolve, reject) => {
-      this.http.delete(`${this.base_url}/gallery/${imageid}`, this.getAuthenticatedHeader())
+      this.http.post<Array<Post>>(`${this.base_url}/vote`, body, this._getAuthenticatedHeader())
         .subscribe(
           (response) => resolve(response),
           (err) => reject(err));
     })
   }
 
-  //utils
-  getExpiration() {
-    const expiration = localStorage.getItem("expires_at");
-    const expiresAt = JSON.parse(expiration);
-    return moment(expiresAt);
+  public uploadPhoto(file) {
+    var formData = new FormData();
+    formData.append('image', file, file.name);
+    const headers = {
+      headers: new HttpHeaders({ 'x-access-token': localStorage.getItem('token') }),
+      reportProgress: true
+    }
+
+    const request = new HttpRequest('POST', `${this.base_url}/upload`, formData, headers)
+    return this.http.request(request);
   }
+
+  public editImageInfos(image_id: number, title, description, tags) {
+    var body = { title, description, tags };
+    return new Promise((resolve, reject) => {
+      this.http.post(`${this.base_url}/gallery/edit/${image_id}`, body, this._getAuthenticatedHeader())
+        .subscribe(
+          (response) => resolve(response),
+          // TODO il resolve qui permette di bypassare un bug nella funzione del backend che restituisce un errore anche se la richesta va a buon fine
+          (err) => resolve(err));
+    })
+  }
+
+  public deletePost(imageid) {
+    return new Promise((resolve, reject) => {
+      this.http.delete(`${this.base_url}/gallery/${imageid}`, this._getAuthenticatedHeader())
+        .subscribe(
+          (response) => resolve(response),
+          (err) => reject(err));
+    })
+  }
+
 }

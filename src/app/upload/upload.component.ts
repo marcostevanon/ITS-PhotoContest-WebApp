@@ -111,7 +111,7 @@ export class UploadComponent implements OnInit {
 
   autodetectInfos() {
     this.isLoadingAutodetecting = true;
-    this.apiService.autodetectInfos(this.uploadedThumbnail)
+    this.apiService.autoDetectInfos(this.uploadedThumbnail)
       .then((res: JSON) => {
         var desc = JSON.parse(JSON.stringify(res)).description;
 
