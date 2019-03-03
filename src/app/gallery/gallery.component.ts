@@ -41,13 +41,6 @@ export class GalleryComponent implements OnInit {
     }, 300)
   }
 
-
-  // deletePost() {
-  //   this.apiService.deletePost(this.toDeletePost.post_id)
-  //     .then(data => this.fetchGalleryPosts())
-  //     .catch(err => { this.fetchGalleryPosts(); console.log(err); })
-  // }
-
   public fetchGalleryPosts() {
     this.isGalleryListLoading = true;
 

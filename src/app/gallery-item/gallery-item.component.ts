@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Post } from 'src/model/post.model';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-gallery-item',
@@ -8,9 +9,16 @@ import { Post } from 'src/model/post.model';
 })
 export class GalleryItemComponent implements OnInit {
   @Input() post: Post;
+  @Output() updateGalleryPost = new EventEmitter();
+  showDeleteModal: boolean = false;
 
-  constructor() { }
+  constructor(private apiService: ApiService) { }
 
   ngOnInit() { }
 
+  deletePost() {
+    this.apiService.deletePost(this.post.post_id)
+      .then(data => this.updateGalleryPost.emit(null))
+      .catch(err => { this.updateGalleryPost.emit(null); console.log(err); })
+  }
 }

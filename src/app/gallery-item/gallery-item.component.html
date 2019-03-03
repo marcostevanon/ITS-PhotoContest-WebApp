@@ -27,7 +27,7 @@
               </a>
 
               <!-- Delete Post -->
-              <a class="item">
+              <a class="item" (click)="showDeleteModal = true">
                 <i class="trash alternate outline icon"></i>Delete
               </a>
             </div>
@@ -88,6 +88,7 @@
           [isReadonly]="post.isReadonly"></sui-rating>
       </div>
 
+      <!-- Stats -->
       <div class="mt-1" *ngIf="post.isVoted">
         <span><i class="user icon"></i><b>{{post.votes_n}}</b> Votes</span>&nbsp;&nbsp;&nbsp;&nbsp;
         <span><i class="chart bar outline icon"></i>Avg: <b>{{post.votes_avg}}</b></span>
@@ -95,5 +96,33 @@
 
     </div>
   </div>
-  
+
 </div>
+
+<!-- Delete Modal -->
+<sui-modal [isClosable]="true" [mustScroll]="true" [isFullScreen]="true" *ngIf="showDeleteModal" (dismissed)="showDeleteModal = false" #modalDelete>
+
+  <!-- Header -->
+  <div class="header">
+    Are you sure to delete post?
+  </div>
+
+  <!-- Image to delete -->
+  <div class="content">
+    <div class="ui centered card">
+      <div class="image">
+        <img src="{{post.thumbnail_url || post.raw_image_url}}">
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <div class="ui buttons mb-3">
+      <div class="ui negative button" (click)="modalDelete.approve(); deletePost()">
+        <i class="trash icon"></i> Yes,Delete</div>
+      <div class="ui secondary basic button" (click)="modalDelete.deny();">Cancel</div>
+    </div>
+  </div>
+
+</sui-modal>
