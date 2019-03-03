@@ -2,4 +2,4 @@
 .item-simple:before{ display: none; }
 img.avatar{ border: 1px solid gainsboro; }
 .black { color: black }
-.header{ text-align: center }
+.custom-modal.header{ text-align: center }

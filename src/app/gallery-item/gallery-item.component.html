@@ -45,8 +45,8 @@
   </div>
 
   <!-- Post Image -->
-  <div class="image">
-    <img src="{{post.thumbnail_url || post.raw_image_url}}" (click)="pageDimmed = !pageDimmed; dimmedPost = post">
+  <div class="image" style="cursor: pointer;">
+    <img src="{{post.thumbnail_url || post.raw_image_url}}" (click)="fullScreen = !fullScreen">
   </div>
 
   <!-- Content -->
@@ -100,10 +100,11 @@
 </div>
 
 <!-- Delete Modal -->
-<sui-modal [isClosable]="true" [mustScroll]="true" [isFullScreen]="true" *ngIf="showDeleteModal" (dismissed)="showDeleteModal = false" #modalDelete>
+<sui-modal [isClosable]="true" [mustScroll]="true" [isFullScreen]="true" *ngIf="showDeleteModal"
+  (dismissed)="showDeleteModal = false" #modalDelete>
 
   <!-- Header -->
-  <div class="header">
+  <div class="custom-modal header">
     Are you sure to delete post?
   </div>
 
@@ -126,3 +127,30 @@
   </div>
 
 </sui-modal>
+
+<!-- Full screen dimmer -->
+<sui-dimmer class="page" [(isDimmed)]="fullScreen">
+
+  <h2 class="ui inverted image header mt-5">
+    <div class="ui fluid middle aligned">
+      <img src="{{post.thumbnail_url || post.raw_image_url}}">
+    </div>
+  </h2>
+
+  <div class="content">
+    <h3 class="header my-0 py-0">{{post.title}}</h3>
+    <div class="description mt-1">{{post.description}}</div>
+  </div>
+
+</sui-dimmer>
+
+
+<!-- <sui-dimmer class="ui blurring segment page" [(isDimmed)]="pageDimmed">
+		<div class="ui inverted segment">
+			<img class="ui fluid middle aligned image" src="{{dimmedPost.image_url}}">
+			<div class="content">
+				<div class="header py-0">{{dimmedPost.title}}</div>
+				<div class="description my-0">{{dimmedPost.description}}</div>
+			</div>
+		</div>
+	</sui-dimmer> -->
