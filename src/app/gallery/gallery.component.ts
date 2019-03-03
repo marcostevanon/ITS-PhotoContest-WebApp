@@ -24,23 +24,6 @@ export class GalleryComponent implements OnInit {
     this.fetchGalleryPosts();
   }
 
-  public setVote(post: Post, value) {
-    post.isReadonly = true;
-
-    setTimeout(() => {
-      post.isSendingVote = true;
-
-      this.apiService.setVote(post.post_id, value)
-        .then((response: PostResponse) => {
-          post.votes_avg = response.votes_avg;
-          post.votes_n = response.votes_n;
-
-          post.isSendingVote = false;
-          post.isVoted = true;
-        }).catch(console.log)
-    }, 300)
-  }
-
   public fetchGalleryPosts() {
     this.isGalleryListLoading = true;
 
@@ -51,7 +34,4 @@ export class GalleryComponent implements OnInit {
         this.isGalleryListLoading = false;
       }).catch(console.log)
   }
-
-  // public pageDimmed: boolean = false;
-  // public dimmedPost: Post;
 }
