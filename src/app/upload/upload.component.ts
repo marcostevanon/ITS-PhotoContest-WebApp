@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth.service';
+import { ApiService } from '../api.service';
 import { HttpResponse, HttpEventType } from '@angular/common/http';
 import { NgForm } from '@angular/forms';
 import { UploadResponde } from 'src/model/post.model';
@@ -34,7 +34,7 @@ export class UploadComponent implements OnInit {
 
   isSubmitting = false;
 
-  constructor(private authService: AuthService) { }
+  constructor(private apiService: ApiService) { }
   ngOnInit() { }
 
   onFileSelection(event) {
@@ -64,7 +64,7 @@ export class UploadComponent implements OnInit {
     formData.append('title', 'DefaultTitle');
     formData.append('description', 'DefaultDescription');
 
-    this.authService.uploadPhoto(this.photoSelected)
+    this.apiService.uploadPhoto(this.photoSelected)
       .subscribe(event => {
         if (event.type === HttpEventType.Sent) console.log(`Uploading ...`)
         else if (event.type === HttpEventType.UploadProgress) {
@@ -83,7 +83,7 @@ export class UploadComponent implements OnInit {
   }
 
   checkIfRenderingIsCompleted(data) {
-    this.authService.checkUpload(data.image_id)
+    this.apiService.checkUpload(data.image_id)
       .then((res: { status: string, resized_image_url: string }) => {
         if (res.status == "uploaded") {
           this.isRenedringCompleted = true;
@@ -111,7 +111,7 @@ export class UploadComponent implements OnInit {
 
   autodetectInfos() {
     this.isLoadingAutodetecting = true;
-    this.authService.autodetectInfos(this.uploadedThumbnail)
+    this.apiService.autodetectInfos(this.uploadedThumbnail)
       .then((res: JSON) => {
         var desc = JSON.parse(JSON.stringify(res)).description;
 
@@ -152,7 +152,7 @@ export class UploadComponent implements OnInit {
 
     this.isSubmitting = true;
 
-    this.authService.editImageInfos(image_id, title, description, tags)
+    this.apiService.editImageInfos(image_id, title, description, tags)
       .then(res => {
         this.isSubmitting = false;
         this.uploadNewPhoto();

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AuthService } from '../auth.service';
+import { ApiService } from '../api.service';
 import { User } from 'src/model/user.model';
 
 @Component({
@@ -9,7 +9,7 @@ import { User } from 'src/model/user.model';
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent implements OnInit {
-
+  
   firstname_error: boolean = false;
   email_error: boolean = false;
   username_error: boolean = false;
@@ -17,9 +17,11 @@ export class RegistrationComponent implements OnInit {
   registration_error: boolean = false;
   registration_error_message: string = 'User already exist';
   registration_completed: boolean = false;
-
+  
   isLoading: boolean = false;
   public username;
+  
+  constructor(private apiService: ApiService) { }
 
   signup(form: NgForm) {
     this.registration_error = false;
@@ -34,7 +36,7 @@ export class RegistrationComponent implements OnInit {
       this.isLoading = true;
 
       var user = new User(val.firstname, val.lastname, val.email, val.username, val.password, val.avatar);
-      this.authService.signup(user)
+      this.apiService.signup(user)
         .then(() => {
           form.reset();
           this.isLoading = false;
@@ -48,7 +50,6 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
-  constructor(private authService: AuthService) { }
 
   ngOnInit() { }
 

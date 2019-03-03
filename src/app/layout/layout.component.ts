@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth.service';
+import { ApiService } from '../api.service';
 import { User } from 'src/model/user.model';
 
 @Component({
@@ -11,9 +11,9 @@ import { User } from 'src/model/user.model';
 export class LayoutComponent implements OnInit {
   public loggedUser: User;
 
-  constructor(private authService: AuthService) { }
+  constructor(private apiService: ApiService) { }
 
-  ngOnInit() { this.loggedUser = this.authService.getUserData(); }
+  ngOnInit() { this.loggedUser = this.apiService.getUserData(); }
 
-  logout() { this.authService.logout(); }
+  logout() { this.apiService.logout(); }
 }

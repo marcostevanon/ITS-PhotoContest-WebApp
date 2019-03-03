@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth.service';
+import { ApiService } from '../api.service';
 import { SearchResult } from 'src/model/search.model';
 import { ActivatedRoute } from '@angular/router';
 import { Post, PostResponse } from 'src/model/post.model';
@@ -21,10 +21,10 @@ export class SearchComponent implements OnInit {
   byTags: Array<Post> = []
   byUser: Array<User> = []
 
-  constructor(private route: ActivatedRoute, private authService: AuthService) { }
+  constructor(private route: ActivatedRoute, private apiService: ApiService) { }
 
   ngOnInit() {
-    this.loggedUser = this.authService.getUserData();
+    this.loggedUser = this.apiService.getUserData();
 
     var keyword = this.route.snapshot.params.keyword;
     if (keyword) {
@@ -37,7 +37,7 @@ export class SearchComponent implements OnInit {
     if (keyword.length > this.minChar) {
       this.isSearching = true;
 
-      this.authService.search(keyword)
+      this.apiService.search(keyword)
         .then((res: SearchResult) => {
 
           this.byTitleDesc = []

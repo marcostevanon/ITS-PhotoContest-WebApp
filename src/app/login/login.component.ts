@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth.service';
+import { ApiService } from '../api.service';
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -18,10 +18,10 @@ export class LoginComponent implements OnInit {
   alreadyLoggedIn: boolean = false;
   loggedInUsername: string;
 
-  constructor(private authService: AuthService) {
-    this.alreadyLoggedIn = authService.isLoggedIn();
+  constructor(private apiService: ApiService) {
+    this.alreadyLoggedIn = apiService.isLoggedIn();
     if (this.alreadyLoggedIn)
-      this.loggedInUsername = authService.getUserData().username;
+      this.loggedInUsername = apiService.getUserData().username;
   }
 
   submit(form: NgForm) {
@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
     if (form.valid && val.username && val.password) {
       this.isLoading = true;
 
-      this.authService.login(val.username, val.password)
+      this.apiService.login(val.username, val.password)
         .then(() => { this.isLoading = false; })
         .catch((err) => {
           this.isLoading = false;

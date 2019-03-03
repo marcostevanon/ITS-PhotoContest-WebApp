@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Post, PostResponse } from 'src/model/post.model';
-import { AuthService } from '../auth.service';
+import { ApiService } from '../api.service';
 import { User } from 'src/model/user.model';
 
 @Component({
@@ -17,10 +17,10 @@ export class GalleryComponent implements OnInit {
 
   public imageUploadedConfirmation = false;
 
-  constructor(private authService: AuthService) { }
+  constructor(private apiService: ApiService) { }
 
   ngOnInit() {
-    this.loggedUser = this.authService.getUserData();
+    this.loggedUser = this.apiService.getUserData();
     this.fetchGalleryPosts();
   }
 
@@ -30,7 +30,7 @@ export class GalleryComponent implements OnInit {
     setTimeout(() => {
       post.isSendingVote = true;
 
-      this.authService.setVote(post.post_id, value)
+      this.apiService.setVote(post.post_id, value)
         .then((response: PostResponse) => {
           post.votes_avg = response.votes_avg;
           post.votes_n = response.votes_n;
@@ -43,7 +43,7 @@ export class GalleryComponent implements OnInit {
 
 
   // deletePost() {
-  //   this.authService.deletePost(this.toDeletePost.post_id)
+  //   this.apiService.deletePost(this.toDeletePost.post_id)
   //     .then(data => this.fetchGalleryPosts())
   //     .catch(err => { this.fetchGalleryPosts(); console.log(err); })
   // }
@@ -51,7 +51,7 @@ export class GalleryComponent implements OnInit {
   public fetchGalleryPosts() {
     this.isGalleryListLoading = true;
 
-    this.authService.getGallery()
+    this.apiService.getGallery()
       .then((data: Array<PostResponse>) => {
         this.posts = [];
         data.forEach((item: PostResponse) => this.posts.push(new Post(item, this.loggedUser)));

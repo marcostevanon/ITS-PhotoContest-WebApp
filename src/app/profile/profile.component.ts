@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthService } from '../auth.service';
+import { ApiService } from '../api.service';
 import { User } from 'src/model/user.model';
 import { Post, PostResponse } from 'src/model/post.model';
 
@@ -19,15 +19,15 @@ export class ProfileComponent implements OnInit {
 
   public loggedUser: User;
 
-  constructor(private route: ActivatedRoute, private authService: AuthService) { }
+  constructor(private route: ActivatedRoute, private apiService: ApiService) { }
 
   ngOnInit() {
-    this.loggedUser = this.authService.getUserData();
+    this.loggedUser = this.apiService.getUserData();
     var userId = this.route.snapshot.params.userid;
 
-    this.authService.getProfileData(userId)
+    this.apiService.getProfileData(userId)
       .then((response: User) => this.userData = response)
-      .then(() => this.authService.getProfileImageList(userId))
+      .then(() => this.apiService.getProfileImageList(userId))
       .then((response: Array<PostResponse>) => {
         response.forEach((item: PostResponse) => {
           this.imageList.push(new Post(item, this.loggedUser));

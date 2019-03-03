@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthService } from '../auth.service';
+import { ApiService } from '../api.service';
 import { NgForm } from '@angular/forms';
 import { PostResponse, Post } from 'src/model/post.model';
 import { User } from 'src/model/user.model';
@@ -18,13 +18,13 @@ export class PostEditComponent implements OnInit {
   post: Post;
 
   isSubmitting = false;
-  constructor(private route: ActivatedRoute, private authService: AuthService) { }
+  constructor(private route: ActivatedRoute, private apiService: ApiService) { }
 
   ngOnInit() {
-    this.loggedUser = this.authService.getUserData();
+    this.loggedUser = this.apiService.getUserData();
 
     var imageid = this.route.snapshot.params.imageid;
-    this.authService.getPost(imageid)
+    this.apiService.getPost(imageid)
       .then((response: PostResponse) => {
         this.post = new Post(response, this.loggedUser);
         this.isLoading = false;
@@ -52,7 +52,7 @@ export class PostEditComponent implements OnInit {
   edit(form: NgForm) {
     this.isSubmitting = true;
 
-    this.authService.editImageInfos(this.post.post_id, this.post.title, this.post.description, this.post.tags)
+    this.apiService.editImageInfos(this.post.post_id, this.post.title, this.post.description, this.post.tags)
       .then(res => { this.isSubmitting = false; this.isEditedDone = true; })
       .catch(err => { this.isSubmitting = false; console.log(err); })
   }

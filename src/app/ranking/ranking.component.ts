@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth.service';
+import { ApiService } from '../api.service';
 import { Post, PostResponse } from 'src/model/post.model';
 import { User } from 'src/model/user.model';
 
@@ -14,10 +14,10 @@ export class RankingComponent implements OnInit {
   public posts: Array<Post> = [];
   public loggedUser: User;
 
-  constructor(private authService: AuthService) { }
+  constructor(private apiService: ApiService) { }
   ngOnInit() {
-    this.loggedUser = this.authService.getUserData();
-    this.authService.getRanking()
+    this.loggedUser = this.apiService.getUserData();
+    this.apiService.getRanking()
       .then((data: Array<PostResponse>) => {
         this.posts = [];
         data.forEach((item: PostResponse) => this.posts.push(new Post(item, this.loggedUser)));

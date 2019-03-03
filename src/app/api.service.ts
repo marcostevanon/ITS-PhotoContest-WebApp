@@ -9,17 +9,17 @@ import { Post, PostResponse } from 'src/model/post.model';
 import { SearchResult } from 'src/model/search.model';
 
 @Injectable({ providedIn: 'root' })
-export class AuthService {
+export class ApiService {
   private readonly base_url = environment.api_endpoint;
   private readonly defaultHeader = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
   public redirectUrl: string;
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  // AUTH REQUESTS
+  // Authentication Requests
   login(username: string, password: string) {
-    return new Promise((resolve, reject) => {
 
+    return new Promise((resolve, reject) => {
       this.http.post<LoginResponse>(`${this.base_url}/auth/login`, { username, password }, this.defaultHeader)
         .subscribe(authResult => {
           this.setSession(authResult);
