@@ -47,6 +47,7 @@ export class GalleryItemComponent implements OnInit {
 
   selectedPost;
   toggleFullscreenImage(post) {
+    this.isErrored = false;
     this.fullScreen = !this.fullScreen;
     this.selectedPost = post;
     this.apiService.getVotesByPost(post.post_id)
