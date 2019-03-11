@@ -46,7 +46,7 @@
 
   <!-- Post Image -->
   <div class="image" style="cursor: pointer;">
-    <img src="{{post.thumbnail_url || post.raw_image_url}}" (click)="fullScreen = !fullScreen">
+    <img src="{{post.thumbnail_url || post.raw_image_url}}" (click)="toggleFullscreenImage(post)">
   </div>
 
   <!-- Content -->
@@ -89,10 +89,12 @@
       </div>
 
       <!-- Stats -->
-      <div class="mt-1" *ngIf="post.isVoted">
-        <span><i class="user icon"></i><b>{{post.votes_n}}</b> Votes</span>&nbsp;&nbsp;&nbsp;&nbsp;
-        <span><i class="chart bar outline icon"></i>Avg: <b>{{post.votes_avg}}</b></span>
-      </div>
+      <a (click)="toggleFullscreenImage(post)">
+        <div class="mt-1" *ngIf="post.isVoted">
+          <span><i class="user icon"></i><b>{{post.votes_n}}</b> Votes</span>&nbsp;&nbsp;&nbsp;&nbsp;
+          <span><i class="chart bar outline icon"></i>Avg: <b>{{post.votes_avg}}</b></span>
+        </div>
+      </a>
 
     </div>
   </div>
@@ -128,29 +130,54 @@
 
 </sui-modal>
 
+
 <!-- Full screen dimmer -->
-<sui-dimmer class="page" [(isDimmed)]="fullScreen">
+<sui-dimmer class="page" [(isDimmed)]="fullScreen" *ngIf="fullScreen">
 
-  <h2 class="ui inverted image header mt-5">
-    <div class="ui fluid middle aligned">
-      <img src="{{post.thumbnail_url || post.raw_image_url}}">
+  <div class="ui fluid middle aligned mt-5">
+    <img src="{{selectedPost.thumbnail_url || selectedPost.raw_image_url}}">
+  </div>
+
+  <div class="content mt-3" style="height: 100%;">
+    <h3 class="header my-0 py-0">{{selectedPost.title}}</h3>
+    <div class="description mt-1 mb-2">{{selectedPost.description}}</div>
+
+    <div *ngIf="selectedPost.isVoted">
+      <sui-rating class="huge star" [ngModel]="selectedPost.votes_avg" [maximum]="5" [isReadonly]="true">
+      </sui-rating>&nbsp;&bull;&nbsp;
+      <b style="font-size: 1.5rem">{{selectedPost.votes_avg}}</b>
+
+      <div class="user-list mt-3 px-4">
+
+        <!-- User Votes -->
+        <h3>{{selectedPost.votes_n}} vote(s)</h3>
+
+        <!-- Loading -->
+        <div class="ui active centered inline text loader mt-5" *ngIf="isLoading && !isErrored">
+          <b>Loading...</b>
+        </div>
+        <div class="ui active centered inline inverted header" *ngIf="isErrored">There is a problem!</div>
+
+        <div class="ui center middle aligned divided list" *ngIf="!isLoading">
+
+          <div class="item" *ngFor="let vote of selectedPost.votes">
+            <div class="right floated content">
+              <sui-rating class="huge star" [ngModel]="vote.value" [maximum]="5" [isReadonly]="true">
+              </sui-rating>&nbsp;&bull;&nbsp;
+              <b style="font-size: 1.5rem">{{vote.value}}</b>
+            </div>
+            <img class="ui avatar image" src="{{vote.author_avatar_url}}">
+            <div class="content"> {{vote.author_username}} </div>
+          </div>
+
+        </div>
+
+      </div>
     </div>
-  </h2>
 
-  <div class="content">
-    <h3 class="header my-0 py-0">{{post.title}}</h3>
-    <div class="description mt-1">{{post.description}}</div>
+    <div class="ui active centered inline inverted header mt-5" *ngIf="!selectedPost.isVoted">
+      You have to vote this photo to see the users' votes
+    </div>
   </div>
 
 </sui-dimmer>
-
-
-<!-- <sui-dimmer class="ui blurring segment page" [(isDimmed)]="pageDimmed">
-		<div class="ui inverted segment">
-			<img class="ui fluid middle aligned image" src="{{dimmedPost.image_url}}">
-			<div class="content">
-				<div class="header py-0">{{dimmedPost.title}}</div>
-				<div class="description my-0">{{dimmedPost.description}}</div>
-			</div>
-		</div>
-	</sui-dimmer> -->

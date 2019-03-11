@@ -151,20 +151,34 @@ export class ApiService {
     })
   }
 
-  public getPost(imageid) {
+  public getPost(postId) {
     return new Promise((resolve, reject) => {
-      this.http.get(`${this.base_url}/gallery/${imageid}`, this._getAuthenticatedHeader())
+      this.http.get(`${this.base_url}/gallery/${postId}`, this._getAuthenticatedHeader())
         .subscribe(
           (response: PostResponse) => resolve(response),
           (err) => reject(err));
     })
   }
 
+  public getVotesByPost(postId) {
+    return new Promise((resolve, reject) => {
+      this.http.get(`${this.base_url}/vote/${postId}`, this._getAuthenticatedHeader())
+        .subscribe(
+          (response: Array<Post>) => {
+            response.forEach(item => {
+              if (!item.author_avatar_url) item.author_avatar_url = environment.default_avatar
+            });
+            resolve(response)
+          },
+          (err) => reject(err));
+    })
+  }
+
 
   // POST Requests
-  public setVote(post_id, vote_value) {
+  public setVote(postId, vote_value) {
     var body = {
-      image_id: post_id,
+      image_id: postId,
       user_id: this.getUserData().id,
       value: vote_value
     }

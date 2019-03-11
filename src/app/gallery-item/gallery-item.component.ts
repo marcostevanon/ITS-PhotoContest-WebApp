@@ -13,6 +13,8 @@ export class GalleryItemComponent implements OnInit {
 
   showDeleteModal: boolean = false;
   fullScreen = false;
+  isLoading: boolean = true;
+  isErrored: boolean = false;
 
   constructor(private apiService: ApiService) { }
 
@@ -41,6 +43,22 @@ export class GalleryItemComponent implements OnInit {
           post.isVoted = true;
         })
     }, 300)
+  }
+
+  selectedPost;
+  toggleFullscreenImage(post) {
+    this.fullScreen = !this.fullScreen;
+    this.selectedPost = post;
+    this.apiService.getVotesByPost(post.post_id)
+      .then(response => {
+        this.selectedPost['votes'] = response;
+        this.isLoading = false;
+      })
+      .catch(err => {
+        console.log(err);
+        this.isLoading = false;
+        this.isErrored = true;
+      });
   }
 
 
