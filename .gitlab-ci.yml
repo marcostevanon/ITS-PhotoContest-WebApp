@@ -59,6 +59,6 @@ clean_S3_stage:
   script:
     - aws s3 rm s3://${BUCKET_NAME_STAGE} --recursive
   environment:
-    name: ${CI_COMMIT_REF_SLUG}
+    name: staging
     action: stop
   when: manual
