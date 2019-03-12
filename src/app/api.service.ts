@@ -151,6 +151,16 @@ export class ApiService {
     })
   }
 
+  public getProfileAvgVote(userid) {
+    return new Promise((resolve, reject) => {
+      this.http.get(`${this.base_url}/profile/${userid}/vote_avg`, this._getAuthenticatedHeader())
+        .subscribe(
+          (response: number) => resolve(response),
+          (err) => reject(err));
+    })
+  }
+
+
   public getPost(postId) {
     return new Promise((resolve, reject) => {
       this.http.get(`${this.base_url}/gallery/${postId}`, this._getAuthenticatedHeader())

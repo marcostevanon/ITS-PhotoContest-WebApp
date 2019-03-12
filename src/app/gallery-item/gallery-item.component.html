@@ -134,7 +134,12 @@
 <!-- Full screen dimmer -->
 <sui-dimmer class="page" [(isDimmed)]="fullScreen" *ngIf="fullScreen">
 
-  <div class="ui fluid middle aligned mt-5">
+  <a routerLink="/profile/{{post.author_id}}" class="white mt-5">
+    <img class="ui avatar image" src="{{post.author_avatar_url}}">
+    <span class="pl-1">{{post.author_username}}</span>
+  </a>
+
+  <div class="ui fluid middle aligned mt-1">
     <img src="{{selectedPost.thumbnail_url || selectedPost.raw_image_url}}">
   </div>
 
@@ -167,7 +172,11 @@
               <b style="font-size: 1.5rem">{{vote.value}}</b>
             </div>
             <img class="ui avatar image" src="{{vote.author_avatar_url}}">
-            <div class="content"> {{vote.author_username}} </div>
+            <div class="content">
+              <a routerLink="/profile/{{post.author_id}}">
+                <div class="white">{{vote.author_username}}</div>
+              </a>
+            </div>
           </div>
 
         </div>

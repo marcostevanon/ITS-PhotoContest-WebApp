@@ -16,6 +16,7 @@ export class ProfileComponent implements OnInit {
 
   userData: User;
   imageList: Array<Post> = [];
+  vote_avg: number = 0;
 
   public loggedUser: User;
 
@@ -27,11 +28,11 @@ export class ProfileComponent implements OnInit {
 
     this.apiService.getProfileData(userId)
       .then((response: User) => this.userData = response)
+      .then(() => this.apiService.getProfileAvgVote(userId))
+      .then((avg: number) => this.vote_avg = Math.round(avg * 100) / 100)
       .then(() => this.apiService.getProfileImageList(userId))
       .then((response: Array<PostResponse>) => {
-        response.forEach((item: PostResponse) => {
-          this.imageList.push(new Post(item, this.loggedUser));
-        });
+        response.forEach((item: PostResponse) => this.imageList.push(new Post(item, this.loggedUser)));
         this.isLoading = false;
       })
       .catch(err => { this.isErrored = true; console.log(err); })

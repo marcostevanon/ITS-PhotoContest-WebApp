@@ -28,6 +28,15 @@
         <div class="sub header">{{userData.username}}</div>
       </h2>
 
+      <div style="font-size: 1.5rem;">
+        <div>User Score</div>
+        <div>
+          <sui-rating class="massive star my-2" [ngModel]="vote_avg" [maximum]="5" [isReadonly]="true" *ngIf="vote_avg">
+          </sui-rating>
+        </div>
+        <b>{{vote_avg}}</b>
+      </div>
+
     </div>
   </div>
 
@@ -37,11 +46,11 @@
 
   <!-- Gallery List -->
   <div class="ui grid">
-      <div *ngFor="let post of imageList" class="sixteen wide mobile eight wide tablet four wide computer column">
-        <app-gallery-item [post]="post"></app-gallery-item>
-      </div>
+    <div *ngFor="let post of imageList" class="sixteen wide mobile eight wide tablet four wide computer column">
+      <app-gallery-item [post]="post"></app-gallery-item>
     </div>
-  
+  </div>
+
   <!-- Loading -->
   <div class="ui active centered inline text loader mt-5" *ngIf="isLoading && !isErrored">
     <b>Loading...</b>
