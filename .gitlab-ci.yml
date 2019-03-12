@@ -14,7 +14,6 @@ build:
     paths:
       - node_modules/
   script:
-    - npx semantic-release
     - npm install --quiet
     - npm run build-prod
   artifacts:
