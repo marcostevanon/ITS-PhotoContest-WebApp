@@ -7,6 +7,8 @@ stages:
 variables:
   AWS_DEFAULT_REGION: us-east-2
   BUCKET_NAME: tsac18-stevanon-web-stage
+  AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
+  AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
 
 build:
   stage: build
@@ -16,6 +18,10 @@ build:
   artifacts:
     paths:
       - dist/photocontest
+  cache:
+    paths:
+      - node_modules/
+      - semantic/
 
 deployS3:
   image: "python:latest"  # We use python because there is a well-working AWS Sdk
