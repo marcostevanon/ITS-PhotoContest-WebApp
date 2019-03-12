@@ -5,10 +5,9 @@ stages:
   - deploy
 
 variables:
-  AWS_DEFAULT_REGION: us-east-2
-  BUCKET_NAME: tsac18-stevanon-web-stage
-  AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
-  AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+  AWS_REGION: eu-west-1
+  BUCKET_NAME_PROD: tsac18-stevanon-web
+  BUCKET_NAME_STAGE: tsac18-stevanon-web-stage
 
 build:
   stage: build
@@ -18,32 +17,47 @@ build:
   artifacts:
     paths:
       - dist/photocontest
-  cache:
-    # paths:
-    #   - node_modules/
-    #   - semantic/
 
-deployS3:
-  image: "python:latest"  # We use python because there is a well-working AWS Sdk
+deployS3-prod:
+  image: "python:latest"
   stage: deploy
   dependencies:
     - build      # We want to specify dependencies in an explicit way, to avoid confusion if there are different build jobs
   before_script:
-    - pip install awscli # Install the SDK
+    - pip install awscli
   script:
-    - aws s3 cp dist/photocontest s3://${BUCKET_NAME} --recursive
+    - aws s3 cp dist/photocontest s3://${BUCKET_NAME_PROD} --recursive
   environment:
     name: ${CI_COMMIT_REF_SLUG}
-    url: http://${BUCKET_NAME}.s3-website.${AWS_DEFAULT_REGION}.amazonaws.com  # This is the url of the bucket we saved before
-    on_stop: clean_S3 # When the branch is merged, we clean up after ourself
+    url: http://${BUCKET_NAME_PROD}.s3-website-${AWS_REGION}.amazonaws.com
+  only:
+  - master
 
-clean_S3:
+deployS3-stage:
+  image: "python:latest"
+  stage: deploy
+  dependencies:
+    - build      # We want to specify dependencies in an explicit way, to avoid confusion if there are different build jobs
+  before_script:
+    - pip install awscli
+  script:
+    - aws s3 cp dist/photocontest s3://${BUCKET_NAME_STAGE} --recursive
+  environment:
+    name: ${CI_COMMIT_REF_SLUG}
+    url: http://${BUCKET_NAME_STAGE}.s3-website-${AWS_REGION}.amazonaws.com
+    on_stop: clean_S3_stage
+  only:
+  - dev
+
+
+# Manual Jobs
+clean_S3_stage:
   image: "python:latest"
   stage: deploy
   before_script:
     - pip install awscli
   script:
-    - aws s3 rm s3://${BUCKET_NAME} --recursive # Replace example-bucket with your bucket
+    - aws s3 rm s3://${BUCKET_NAME_STAGE} --recursive
   environment:
     name: ${CI_COMMIT_REF_SLUG}
     action: stop
