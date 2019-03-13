@@ -31,7 +31,7 @@ deployS3-prod:
   image: "python:latest"
   stage: deploy
   dependencies:
-    - build
+    - build-prod
   before_script:
     - pip install awscli
   script:
@@ -63,7 +63,7 @@ deployS3-stage:
   image: "python:latest"
   stage: deploy
   dependencies:
-    - build      # We want to specify dependencies in an explicit way, to avoid confusion if there are different build jobs
+    - build-stage
   before_script:
     - pip install awscli
   script:
