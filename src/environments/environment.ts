@@ -4,8 +4,7 @@
 
 export const environment = {
   production: false,
-  api_endpoint: 'http://10.14.200.48:5671' + '/api',
-  // api_endpoint: 'http://debian:5671' + '/api',
+  api_endpoint: 'http://localhost:5671' + '/api',
   default_avatar: 'https://d3v4yqdep5qmmr.cloudfront.net/images/default/avatar.jpg'
 };
 

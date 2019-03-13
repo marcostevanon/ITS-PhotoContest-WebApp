@@ -1,4 +1,4 @@
-image: node:10
+image: node:10-alpine
 
 stages:
   - build
@@ -9,7 +9,12 @@ variables:
   BUCKET_NAME_PROD: tsac18-stevanon-web
   BUCKET_NAME_STAGE: tsac18-stevanon-web-stage
 
-build:
+
+
+#################### PRODUCTION ####################
+
+# PRODUCTION BUILD
+build-prod:
   stage: build
   script:
     - npm install --quiet
@@ -17,12 +22,16 @@ build:
   artifacts:
     paths:
       - dist/photocontest
+  only:
+    - master
+    - tags
 
+# PRODUCTION DEPLOY
 deployS3-prod:
   image: "python:latest"
   stage: deploy
   dependencies:
-    - build      # We want to specify dependencies in an explicit way, to avoid confusion if there are different build jobs
+    - build
   before_script:
     - pip install awscli
   script:
@@ -31,8 +40,25 @@ deployS3-prod:
     name: production
     url: http://${BUCKET_NAME_PROD}.s3-website-${AWS_REGION}.amazonaws.com
   only:
-  - master
+    - master
+    - tags
 
+
+#################### STAGING ####################
+
+# STAGIN BUILD
+build-stage:
+  stage: build
+  script:
+    - npm install --quiet
+    - npm run build-stage
+  artifacts:
+    paths:
+      - dist/photocontest
+  only:
+    - dev
+
+# STAGIN DEPLOY
 deployS3-stage:
   image: "python:latest"
   stage: deploy
@@ -45,20 +71,23 @@ deployS3-stage:
   environment:
     name: staging
     url: http://${BUCKET_NAME_STAGE}.s3-website-${AWS_REGION}.amazonaws.com
-    on_stop: clean_S3_stage
+    #on_stop: clean_S3_stage
   only:
-  - dev
+    - dev
 
 
-# Manual Jobs
-clean_S3_stage:
-  image: "python:latest"
-  stage: deploy
-  before_script:
-    - pip install awscli
-  script:
-    - aws s3 rm s3://${BUCKET_NAME_STAGE} --recursive
-  environment:
-    name: staging
-    action: stop
-  when: manual
+#################### JOBS ####################
+
+# clean_S3_stage:
+#   image: "python:latest"
+#   stage: deploy
+#   before_script:
+#     - pip install awscli
+#   script:
+#     - aws s3 rm s3://${BUCKET_NAME_STAGE} --recursive
+#   environment:
+#     name: staging
+#     action: stop
+#   only:
+#     - dev
+#   when: manual
