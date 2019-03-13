@@ -23,8 +23,9 @@ build-prod:
     paths:
       - dist/photocontest
   only:
-    - master
     - tags
+  except:
+    - branches
 
 # PRODUCTION DEPLOY
 deployS3-prod:
@@ -40,8 +41,9 @@ deployS3-prod:
     name: production
     url: http://${BUCKET_NAME_PROD}.s3-website-${AWS_REGION}.amazonaws.com
   only:
-    - master
     - tags
+  except:
+    - branches
 
 
 #################### STAGING ####################
