@@ -6,3 +6,4 @@ img.avatar{ border: 1px solid gainsboro; }
 .custom-modal.header{ text-align: center }
 .user-list{ margin-left: auto; margin-right: auto; max-width: 500px; text-align: left; }
 .page { overflow-y: scroll; }
+.ui.dimmer { background-color: rgba(80,80,80,.9); }
