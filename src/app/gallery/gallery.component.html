@@ -2,61 +2,62 @@
 
 <div class="ui container">
 
-	<!-- Upload Button -->
-	<button routerLink="/upload" class="ui right floated basic green icon labeled button">
-		<i class="upload icon"></i>Upload
-	</button>
+  <!-- Upload Button -->
+  <button routerLink="/upload" class="ui right floated basic green icon labeled button">
+    <i class="upload icon"></i>Upload
+  </button>
 
-	<!-- Refresh Button -->
-	<button class="ui basic icon labeled button" (click)=" fetchGalleryPosts()" [class.loading]="isGalleryListLoading"
-		[disabled]="isGalleryListLoading">
-		<i class="sync icon"></i>Refresh
-	</button><br><br>
+  <!-- Refresh Button -->
+  <button class="ui basic icon labeled button" (click)=" fetchGalleryPosts()" [class.loading]="isGalleryListLoading"
+    [disabled]="isGalleryListLoading">
+    <i class="sync icon"></i>Refresh
+  </button>
+  <br><br>
 
-	<!-- Gallery placeholder when loading -->
-	<div class="ui grid" *ngIf="isGalleryListLoading">
+  <!-- Gallery placeholder when loading -->
+  <div class="ui grid" *ngIf="isGalleryListLoading">
 
-		<div *ngFor="let i of placeholderPrefetchingArray"
-			class="sixteen wide mobile eight wide tablet four wide computer column">
-			<div class="ui centered card fluid">
+    <div *ngFor="let i of placeholderPrefetchArray"
+      class="sixteen wide mobile eight wide tablet four wide computer column">
+      <div class="ui centered card fluid">
 
-				<!-- Header -->
-				<div class="content">
-					<div class="ui placeholder">
-						<div class="image header">
-							<div class="line"></div>
-							<div class="line"></div>
-						</div>
-					</div>
-				</div>
+        <!-- Header -->
+        <div class="content">
+          <div class="ui placeholder">
+            <div class="image header">
+              <div class="line"></div>
+              <div class="line"></div>
+            </div>
+          </div>
+        </div>
 
-				<!-- Image -->
-				<div class="ui placeholder">
-					<div class="square image"></div>
-				</div>
+        <!-- Image -->
+        <div class="ui placeholder">
+          <div class="square image"></div>
+        </div>
 
-				<!-- Card Body -->
-				<div class="content">
-					<div class="ui placeholder">
-						<div class="paragraph">
-							<div class="line"></div>
-							<div class="line"></div>
-							<div class="line"></div>
-							<div class="line"></div>
-						</div>
-					</div>
-				</div>
+        <!-- Card Body -->
+        <div class="content">
+          <div class="ui placeholder">
+            <div class="paragraph">
+              <div class="line"></div>
+              <div class="line"></div>
+              <div class="line"></div>
+              <div class="line"></div>
+            </div>
+          </div>
+        </div>
 
-			</div>
-		</div>
-	</div>
+      </div>
+    </div>
+  </div>
 
-	<!-- Gallery List -->
-	<div class="ui grid" *ngIf="!isGalleryListLoading">
+  <!-- Gallery List -->
+  <div class="ui grid" *ngIf="!isGalleryListLoading">
 
-		<div *ngFor="let post of posts" class="sixteen wide mobile eight wide tablet four wide computer column">
-			<app-gallery-item (updateGalleryPost)="fetchGalleryPosts()" [post]="post"></app-gallery-item>
-		</div>
+    <div *ngFor="let post of posts" class="sixteen wide mobile eight wide tablet four wide computer column">
+      <app-gallery-item (updateGalleryPost)="fetchGalleryPosts()" [post]="post"></app-gallery-item>
+    </div>
 
-	</div>
+  </div>
 </div>

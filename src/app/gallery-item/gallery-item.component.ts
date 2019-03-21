@@ -8,17 +8,20 @@ import { ApiService } from '../api.service';
   styleUrls: ['./gallery-item.component.css']
 })
 export class GalleryItemComponent implements OnInit {
+
   @Input() post: Post;
   @Output() updateGalleryPost = new EventEmitter();
-
-  showDeleteModal: boolean = false;
+  showDeleteModal = false;
   fullScreen = false;
-  isLoading: boolean = true;
-  isErrored: boolean = false;
+  isLoading = true;
+  isErrored = false;
+  selectedPost;
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService) {
+  }
 
-  ngOnInit() { }
+  ngOnInit() {
+  }
 
   public setVote(post: Post, value) {
     post.isReadonly = true;
@@ -34,19 +37,18 @@ export class GalleryItemComponent implements OnInit {
           post.isSendingVote = false;
           post.isVoted = true;
         }).catch(err => {
-          console.log(err)
+          console.log(err);
 
           post.votes_avg = err.error.votes_avg;
           post.votes_n = err.error.votes_n;
 
           post.isSendingVote = false;
           post.isVoted = true;
-        })
-    }, 300)
+        });
+    }, 300);
   }
 
-  selectedPost;
-  toggleFullscreenImage(post) {
+  public toggleFullscreenImage(post) {
     this.isErrored = false;
     this.fullScreen = !this.fullScreen;
     this.selectedPost = post;
@@ -62,10 +64,12 @@ export class GalleryItemComponent implements OnInit {
       });
   }
 
-
-  deletePost() {
+  public deletePost() {
     this.apiService.deletePost(this.post.post_id)
       .then(data => this.updateGalleryPost.emit(null))
-      .catch(err => { this.updateGalleryPost.emit(null); console.log(err); })
+      .catch(err => {
+        this.updateGalleryPost.emit(null);
+        console.log(err);
+      });
   }
 }
