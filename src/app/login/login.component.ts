@@ -39,7 +39,9 @@ export class LoginComponent implements OnInit {
         .catch((err) => {
           this.isLoading = false;
           this.isFormValid = false;
-          this.loginErrorMessage = err.message;
+          this.loginErrorMessage
+            = "BACKEND MAY BE OFFLINE :(";
+            // = err.message;
         });
     }
   }

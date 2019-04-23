@@ -9,15 +9,13 @@ import { User } from 'src/model/user.model';
   styleUrls: ['./gallery.component.css']
 })
 export class GalleryComponent implements OnInit {
-  public isGalleryListLoading: boolean = true;
-  public placeholderPrefetchingArray = new Array(4).fill(0);
+  public isGalleryListLoading = true;
+  public placeholderPrefetchArray = new Array(4).fill(0);
   public loggedUser: User;
   public posts: Array<Post> = [];
-  toDeletePost: Post;
 
-  public imageUploadedConfirmation = false;
-
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService) {
+  }
 
   ngOnInit() {
     this.loggedUser = this.apiService.getUserData();
@@ -32,6 +30,7 @@ export class GalleryComponent implements OnInit {
         this.posts = [];
         data.forEach((item: PostResponse) => this.posts.push(new Post(item, this.loggedUser)));
         this.isGalleryListLoading = false;
-      }).catch(console.log)
+      })
+      .catch(console.log);
   }
 }
