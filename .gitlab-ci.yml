@@ -55,7 +55,7 @@ deploy-dev-S3:
   environment:
     name: development
     url: http://${BUCKET_NAME_DEV}.s3-website-${AWS_REGION}.amazonaws.com
-    on_stop: clean_dev_S3
+    on_stop: clean_dev_deploy_S3
   only:
     - dev
 
