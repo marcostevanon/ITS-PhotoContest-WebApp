@@ -4,6 +4,12 @@ stages:
   - build
   - deploy
 
+variables:
+  AWS_REGION: eu-west-1
+  BUCKET_NAME_PROD: tsac18-stevanon-web
+  BUCKET_NAME_STAGE: tsac18-stevanon-web-stage
+
+
 # PROD
 build-prod:
   stage: build
