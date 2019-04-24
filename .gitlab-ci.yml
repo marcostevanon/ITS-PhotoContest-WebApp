@@ -53,14 +53,14 @@ deploy-dev-S3:
   script:
     - aws s3 cp dist/photocontest s3://${BUCKET_NAME_DEV} --recursive
   environment:
-    name: dev
+    name: development
     url: http://${BUCKET_NAME_DEV}.s3-website-${AWS_REGION}.amazonaws.com
     on_stop: clean_dev_S3
   only:
     - dev
 
 # MANUAL JOBS
-clean_dev_S3:
+clean_dev_deploy_S3:
   image: python:latest
   stage: deploy
   before_script:
@@ -68,7 +68,7 @@ clean_dev_S3:
   script:
     - aws s3 rm s3://${BUCKET_NAME_DEV} --recursive
   environment:
-    name: dev
+    name: development
     action: stop
   only:
     - dev

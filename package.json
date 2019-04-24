@@ -10,7 +10,7 @@
     "e2e": "ng e2e",
 
     "build-prod": "ng build --configuration=production",
-    "build-stage": "ng build --configuration=staging"
+    "build-stage": "ng build --configuration=development"
   },
   "private": true,
   "dependencies": {
