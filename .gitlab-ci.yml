@@ -4,16 +4,7 @@ stages:
   - build
   - deploy
 
-variables:
-  AWS_REGION: eu-west-1
-  BUCKET_NAME_PROD: tsac18-stevanon-web
-  BUCKET_NAME_STAGE: tsac18-stevanon-web-stage
-
-
-
-#################### PRODUCTION ####################
-
-# PRODUCTION BUILD
+# PROD
 build-prod:
   stage: build
   script:
@@ -23,12 +14,10 @@ build-prod:
     paths:
       - dist/photocontest
   only:
-    - master
     - tags
 
-# PRODUCTION DEPLOY
-deployS3-prod:
-  image: "python:latest"
+deploy-prod-S3:
+  image: python:latest
   stage: deploy
   dependencies:
     - build-prod
@@ -40,14 +29,10 @@ deployS3-prod:
     name: production
     url: http://${BUCKET_NAME_PROD}.s3-website-${AWS_REGION}.amazonaws.com
   only:
-    - master
     - tags
 
-
-#################### STAGING ####################
-
-# STAGIN BUILD
-build-stage:
+# DEV
+build-dev:
   stage: build
   script:
     - npm install --quiet
@@ -58,36 +43,32 @@ build-stage:
   only:
     - dev
 
-# STAGIN DEPLOY
-deployS3-stage:
-  image: "python:latest"
+deploy-dev-S3:
+  image: python:latest
   stage: deploy
   dependencies:
-    - build-stage
+    - build-dev
   before_script:
     - pip install awscli
   script:
-    - aws s3 cp dist/photocontest s3://${BUCKET_NAME_STAGE} --recursive
+    - aws s3 cp dist/photocontest s3://${BUCKET_NAME_DEV} --recursive
   environment:
-    name: staging
-    url: http://${BUCKET_NAME_STAGE}.s3-website-${AWS_REGION}.amazonaws.com
-    #on_stop: clean_S3_stage
+    name: dev
+    url: http://${BUCKET_NAME_DEV}.s3-website-${AWS_REGION}.amazonaws.com
+    on_stop: clean_dev_S3
   only:
     - dev
 
-
-#################### JOBS ####################
-
-# clean_S3_stage:
-#   image: "python:latest"
-#   stage: deploy
-#   before_script:
-#     - pip install awscli
-#   script:
-#     - aws s3 rm s3://${BUCKET_NAME_STAGE} --recursive
-#   environment:
-#     name: staging
-#     action: stop
-#   only:
-#     - dev
-#   when: manual
+# MANUAL JOBS
+clean_dev_S3:
+  image: python:latest
+  before_script:
+    - pip install awscli
+  script:
+    - aws s3 rm s3://${BUCKET_NAME_DEV} --recursive
+  environment:
+    name: dev
+    action: stop
+  only:
+    - dev
+  when: manual
