@@ -6,9 +6,8 @@ stages:
 
 variables:
   AWS_REGION: eu-west-1
-  BUCKET_NAME_PROD: tsac18-stevanon-web
-  BUCKET_NAME_STAGE: tsac18-stevanon-web-stage
-
+  BUCKET_NAME_AWS: tsac18-stevanon-web
+  BUCKET_NAME_VULTR: tsac18-stevanon-web-stage
 
 # PROD
 build-prod:
@@ -30,10 +29,10 @@ deploy-prod-S3:
   before_script:
     - pip install awscli
   script:
-    - aws s3 cp dist/photocontest s3://${BUCKET_NAME_PROD} --recursive
+    - aws s3 cp dist/photocontest s3://${BUCKET_NAME_AWS} --recursive
   environment:
     name: production
-    url: http://${BUCKET_NAME_PROD}.s3-website-${AWS_REGION}.amazonaws.com
+    url: http://${BUCKET_NAME_AWS}.s3-website-${AWS_REGION}.amazonaws.com
   only:
     - tags
 
@@ -57,10 +56,10 @@ deploy-dev-S3:
   before_script:
     - pip install awscli
   script:
-    - aws s3 cp dist/photocontest s3://${BUCKET_NAME_DEV} --recursive
+    - aws s3 cp dist/photocontest s3://${BUCKET_NAME_VULTR} --recursive
   environment:
     name: development
-    url: http://${BUCKET_NAME_DEV}.s3-website-${AWS_REGION}.amazonaws.com
+    url: http://${BUCKET_NAME_VULTR}.s3-website-${AWS_REGION}.amazonaws.com
     on_stop: clean_dev_deploy_S3
   only:
     - dev
@@ -72,7 +71,7 @@ clean_dev_deploy_S3:
   before_script:
     - pip install awscli
   script:
-    - aws s3 rm s3://${BUCKET_NAME_DEV} --recursive
+    - aws s3 rm s3://${BUCKET_NAME_VULTR} --recursive
   environment:
     name: development
     action: stop
