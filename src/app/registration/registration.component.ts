@@ -9,7 +9,7 @@ import { User } from 'src/model/user.model';
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent implements OnInit {
-  
+
   firstname_error: boolean = false;
   email_error: boolean = false;
   username_error: boolean = false;
@@ -17,10 +17,10 @@ export class RegistrationComponent implements OnInit {
   registration_error: boolean = false;
   registration_error_message: string = 'User already exist';
   registration_completed: boolean = false;
-  
+
   isLoading: boolean = false;
   public username;
-  
+
   constructor(private apiService: ApiService) { }
 
   signup(form: NgForm) {
@@ -45,7 +45,11 @@ export class RegistrationComponent implements OnInit {
         .catch(err => {
           this.isLoading = false;
           this.registration_error = true;
-          this.registration_error_message = err.error;
+          if (err.name == "HttpErrorResponse") {
+            this.registration_error_message = "Server may be offline, try again later :("
+          } else {
+            this.registration_error_message = err.message;
+          }
         });
     }
   }
