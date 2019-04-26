@@ -20,6 +20,8 @@ build-prod:
       - dist/photocontest
   only:
     - tags
+  except:
+    - branches
 
 deploy-prod-S3:
   image: python:latest
@@ -35,6 +37,8 @@ deploy-prod-S3:
     url: http://${BUCKET_NAME_AWS}.s3-website-${AWS_REGION}.amazonaws.com
   only:
     - tags
+  except:
+    - branches
 
 # DEV
 build-dev:
