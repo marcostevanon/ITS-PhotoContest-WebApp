@@ -39,9 +39,12 @@ export class LoginComponent implements OnInit {
         .catch((err) => {
           this.isLoading = false;
           this.isFormValid = false;
-          this.loginErrorMessage
-            = "BACKEND MAY BE OFFLINE :(";
-            // = err.message;
+          if (err.message == "Unknown Error") {
+            this.loginErrorMessage = "Server may be offline, try again later :("
+          } else {
+            this.loginErrorMessage = err.message;
+          }
+          console.log(err);
         });
     }
   }

@@ -6,14 +6,10 @@ stages:
 
 variables:
   AWS_REGION: eu-west-1
-  BUCKET_NAME_PROD: tsac18-stevanon-web
-  BUCKET_NAME_STAGE: tsac18-stevanon-web-stage
+  BUCKET_NAME_AWS: tsac18-stevanon-web
+  BUCKET_NAME_VULTR: tsac18-stevanon-web-stage
 
-
-
-#################### PRODUCTION ####################
-
-# PRODUCTION BUILD
+# PROD
 build-prod:
   stage: build
   script:
@@ -27,29 +23,25 @@ build-prod:
   except:
     - branches
 
-# PRODUCTION DEPLOY
-deployS3-prod:
-  image: "python:latest"
+deploy-prod-S3:
+  image: python:latest
   stage: deploy
   dependencies:
     - build-prod
   before_script:
     - pip install awscli
   script:
-    - aws s3 cp dist/photocontest s3://${BUCKET_NAME_PROD} --recursive
+    - aws s3 cp dist/photocontest s3://${BUCKET_NAME_AWS} --recursive
   environment:
     name: production
-    url: http://${BUCKET_NAME_PROD}.s3-website-${AWS_REGION}.amazonaws.com
+    url: http://${BUCKET_NAME_AWS}.s3-website-${AWS_REGION}.amazonaws.com
   only:
     - tags
   except:
     - branches
 
-
-#################### STAGING ####################
-
-# STAGIN BUILD
-build-stage:
+# DEV
+build-dev:
   stage: build
   script:
     - npm install --quiet
@@ -60,36 +52,33 @@ build-stage:
   only:
     - dev
 
-# STAGIN DEPLOY
-deployS3-stage:
-  image: "python:latest"
+deploy-dev-S3:
+  image: python:latest
   stage: deploy
   dependencies:
-    - build-stage
+    - build-dev
   before_script:
     - pip install awscli
   script:
-    - aws s3 cp dist/photocontest s3://${BUCKET_NAME_STAGE} --recursive
+    - aws s3 cp dist/photocontest s3://${BUCKET_NAME_VULTR} --recursive
   environment:
-    name: staging
-    url: http://${BUCKET_NAME_STAGE}.s3-website-${AWS_REGION}.amazonaws.com
-    #on_stop: clean_S3_stage
+    name: development
+    url: http://${BUCKET_NAME_VULTR}.s3-website-${AWS_REGION}.amazonaws.com
+    on_stop: clean_dev_deploy_S3
   only:
     - dev
 
-
-#################### JOBS ####################
-
-# clean_S3_stage:
-#   image: "python:latest"
-#   stage: deploy
-#   before_script:
-#     - pip install awscli
-#   script:
-#     - aws s3 rm s3://${BUCKET_NAME_STAGE} --recursive
-#   environment:
-#     name: staging
-#     action: stop
-#   only:
-#     - dev
-#   when: manual
+# MANUAL JOBS
+clean_dev_deploy_S3:
+  image: python:latest
+  stage: deploy
+  before_script:
+    - pip install awscli
+  script:
+    - aws s3 rm s3://${BUCKET_NAME_VULTR} --recursive
+  environment:
+    name: development
+    action: stop
+  only:
+    - dev
+  when: manual
