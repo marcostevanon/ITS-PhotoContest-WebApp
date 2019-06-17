@@ -1,5 +1,3 @@
-image: node:10-alpine
-
 stages:
   - build
   - deploy
@@ -7,15 +5,6 @@ stages:
 variables:
   DEPLOY_PATH: "/home/marco/gitlab-ws/photocontest-autodeploy/backend"
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-
-before_script:
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
-    - eval $(ssh-agent -s)
-    - echo "$PRIVATE_KEY_DO" | tr -d '\r' | ssh-add - > /dev/null
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - ssh-keyscan -p $PORT_DO $HOSTNAME_DO >> ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
 
 build:
   stage: build
@@ -35,6 +24,14 @@ build:
 
 deploy:
   stage: deploy
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
+    - eval $(ssh-agent -s)
+    - echo "$PRIVATE_KEY_DO" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -p $PORT_DO $HOSTNAME_DO >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
   script:
     - ssh $USERNAME@$HOSTNAME -p $PORT "mkdir -p $DEPLOY_PATH"
     - scp -P $PORT -rp docker-compose.yml $USERNAME@$HOSTNAME:$DEPLOY_PATH
