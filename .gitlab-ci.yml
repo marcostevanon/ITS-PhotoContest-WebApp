@@ -37,6 +37,7 @@ deploy:
     - scp -P $PORT -rp docker-compose.yml $USERNAME@$HOSTNAME:$DEPLOY_PATH
     - |
       ssh $USERNAME@$HOSTNAME -p $PORT "cd $DEPLOY_PATH && 
+        echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin &&
         docker-compose -f docker-compose.yml pull &&
         docker-compose -f docker-compose.yml up --build --force-recreate -d"
   # only:
