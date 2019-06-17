@@ -29,7 +29,7 @@ export class Post {
         this.post_id = item.post_id;
         this.author_id = item.author_id;
         this.author_username = item.author_username;
-        this.author_avatar_url = item.author_avatar_url ? item.author_avatar_url : environment.default_avatar;
+        this.author_avatar_url = item.author_avatar_url ? item.author_avatar_url : environment.DEFAULT_AVATAR;
         this.raw_image_url = item.raw_image_url;
         this.thumbnail_url = item.thumbnail_url;
         this.title = item.title;
