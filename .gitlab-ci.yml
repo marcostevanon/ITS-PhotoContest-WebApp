@@ -11,16 +11,13 @@ build:
   image: docker
   services:
     - docker:dind
-  before_script:
-    - ''
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - |
-      docker build -t $IMAGE_TAG --no-cache .
+    - docker build -t $IMAGE_TAG --no-cache .
     - docker push $IMAGE_TAG
     - docker rmi $IMAGE_TAG
-  # only:
-  #   - master
+  only:
+    - master
 
 deploy:
   stage: deploy
@@ -40,8 +37,8 @@ deploy:
         echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin &&
         docker-compose -f docker-compose.yml pull &&
         docker-compose -f docker-compose.yml up --build --force-recreate -d"
-  # only:
-  #   - master
+  only:
+    - master
   environment:
     name: production
     url: https://photocontest.marcostevanon.ovh
