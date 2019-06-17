@@ -3,7 +3,7 @@ stages:
   - deploy
 
 variables:
-  DEPLOY_PATH: "/home/marco/gitlab-ws/photocontest-autodeploy/backend"
+  DEPLOY_PATH: "/home/marco/gitlab-ws/photocontest-autodeploy/frontend"
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
 
 build:
