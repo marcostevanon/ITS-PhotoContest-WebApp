@@ -10,7 +10,7 @@ import { SearchResult } from 'src/model/search.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private readonly base_url = environment.api_endpoint;
+  private readonly base_url = environment.API_ENDPOINT;
   private readonly defaultHeader = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
   public redirectUrl: string;
 
@@ -52,10 +52,9 @@ export class ApiService {
 
   public getUserData(): User {
     var user: User = JSON.parse(localStorage.getItem('userdata'))
-    if (!user.avatar) user.avatar = environment.default_avatar;
+    if (!user.avatar) user.avatar = environment.DEFAULT_AVATAR;
     return user;
   }
-
 
   // Authentication Requests
   public login(username: string, password: string) {
@@ -135,7 +134,7 @@ export class ApiService {
       this.http.get(`${this.base_url}/profile/${userid}`, this._getAuthenticatedHeader())
         .subscribe(
           (response: User) => {
-            if (!response.avatar) response.avatar = environment.default_avatar;
+            if (!response.avatar) response.avatar = environment.DEFAULT_AVATAR;
             resolve(response)
           },
           (err) => reject(err));
@@ -176,7 +175,7 @@ export class ApiService {
         .subscribe(
           (response: Array<Post>) => {
             response.forEach(item => {
-              if (!item.author_avatar_url) item.author_avatar_url = environment.default_avatar
+              if (!item.author_avatar_url) item.author_avatar_url = environment.DEFAULT_AVATAR
             });
             resolve(response)
           },

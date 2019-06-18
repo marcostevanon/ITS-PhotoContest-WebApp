@@ -1,84 +1,46 @@
-image: node:10-alpine
-
 stages:
   - build
   - deploy
 
 variables:
-  AWS_REGION: eu-west-1
-  BUCKET_NAME_AWS: tsac18-stevanon-web
-  BUCKET_NAME_VULTR: tsac18-stevanon-web-stage
+  DEPLOY_PATH: "/home/marco/gitlab-ws/photocontest-autodeploy/frontend"
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
 
-# PROD
-build-prod:
+build:
   stage: build
+  image: docker
+  services:
+    - docker:dind
   script:
-    - npm install --quiet
-    - npm run build-prod
-  artifacts:
-    paths:
-      - dist/photocontest
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $IMAGE_TAG --no-cache .
+    - docker push $IMAGE_TAG
+    - docker rmi $IMAGE_TAG
   only:
-    - tags
-  except:
-    - branches
+    - master
 
-deploy-prod-S3:
-  image: python:latest
+deploy:
   stage: deploy
-  dependencies:
-    - build-prod
   before_script:
-    - pip install awscli
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
+    - eval $(ssh-agent -s)
+    - echo "$PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -p $PORT $HOSTNAME >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
   script:
-    - aws s3 cp dist/photocontest s3://${BUCKET_NAME_AWS} --recursive
+    - ssh $USERNAME@$HOSTNAME -p $PORT "mkdir -p $DEPLOY_PATH"
+    - scp -P $PORT -rp docker-compose.yml $USERNAME@$HOSTNAME:$DEPLOY_PATH
+    - |
+      ssh $USERNAME@$HOSTNAME -p $PORT "cd $DEPLOY_PATH && 
+        echo $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin &&
+        docker-compose -f docker-compose.yml pull &&
+        docker-compose -f docker-compose.yml up --build --force-recreate -d"
+  only:
+    - master
   environment:
     name: production
-    url: http://${BUCKET_NAME_AWS}.s3-website-${AWS_REGION}.amazonaws.com
-  only:
-    - tags
-  except:
-    - branches
-
-# DEV
-build-dev:
-  stage: build
-  script:
-    - npm install --quiet
-    - npm run build-stage
-  artifacts:
-    paths:
-      - dist/photocontest
-  only:
-    - dev
-
-deploy-dev-S3:
-  image: python:latest
-  stage: deploy
-  dependencies:
-    - build-dev
-  before_script:
-    - pip install awscli
-  script:
-    - aws s3 cp dist/photocontest s3://${BUCKET_NAME_VULTR} --recursive
-  environment:
-    name: development
-    url: http://${BUCKET_NAME_VULTR}.s3-website-${AWS_REGION}.amazonaws.com
-    on_stop: clean_dev_deploy_S3
-  only:
-    - dev
-
-# MANUAL JOBS
-clean_dev_deploy_S3:
-  image: python:latest
-  stage: deploy
-  before_script:
-    - pip install awscli
-  script:
-    - aws s3 rm s3://${BUCKET_NAME_VULTR} --recursive
-  environment:
-    name: development
-    action: stop
-  only:
-    - dev
-  when: manual
+    url: https://photocontest.marcostevanon.ovh
+  when:
+    manual

@@ -1,0 +1,82 @@
+image: node:10-alpine
+
+stages:
+  - build
+  - deploy
+
+variables:
+  AWS_REGION: eu-west-1
+  BUCKET_NAME_AWS: tsac18-stevanon-web
+  BUCKET_NAME_VULTR: tsac18-stevanon-web-stage
+
+# AWS
+build-aws:
+  stage: build
+  script:
+    - npm install --quiet
+    - npm run build-aws
+  artifacts:
+    paths:
+      - dist/photocontest
+  only:
+    - master
+
+deploy-aws-S3:
+  image: python:latest
+  stage: deploy
+  dependencies:
+    - build-aws
+  before_script:
+    - pip install awscli
+  script:
+    - aws s3 cp dist/photocontest s3://${BUCKET_NAME_AWS} --recursive
+  environment:
+    name: aws
+    url: http://${BUCKET_NAME_AWS}.s3-website-${AWS_REGION}.amazonaws.com
+  only:
+    - master
+  when:
+    manual
+
+# VULTR
+build-vultr:
+  stage: build
+  script:
+    - npm install --quiet
+    - npm run build-vultr
+  artifacts:
+    paths:
+      - dist/photocontest
+  only:
+    - dev
+
+deploy-vultr-S3:
+  image: python:latest
+  stage: deploy
+  dependencies:
+    - build-vultr
+  before_script:
+    - pip install awscli
+  script:
+    - aws s3 cp dist/photocontest s3://${BUCKET_NAME_VULTR} --recursive
+  environment:
+    name: vultr
+    url: http://${BUCKET_NAME_VULTR}.s3-website-${AWS_REGION}.amazonaws.com
+    on_stop: clean_vultr_deploy_S3
+  only:
+    - dev
+
+# MANUAL JOBS
+clean_vultr_deploy_S3:
+  image: python:latest
+  stage: deploy
+  before_script:
+    - pip install awscli
+  script:
+    - aws s3 rm s3://${BUCKET_NAME_VULTR} --recursive
+  environment:
+    name: vultr
+    action: stop
+  only:
+    - dev
+  when: manual
